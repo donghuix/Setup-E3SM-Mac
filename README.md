@@ -85,6 +85,8 @@
 	./case.build
 	```
 
+	* In the run folder, ```mkdir -p ./timing/checkpoints/```
+
 	* Run the case
 	```
 	./preview_run
