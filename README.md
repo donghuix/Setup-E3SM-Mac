@@ -92,7 +92,31 @@
 	./preview_run
     ``` to see the command to run the case
 
+6. User defined land grid
+	
+	* Creating surface dataset and domain file: https://github.com/bishtgautam/matlab-script-for-clm-sparse-grid
+		* This script generate a new mesh that comprises of two grids cells corresponding to two watersheds in our study region. The watersheds are shown in the first image on https://icom.atlassian.net/wiki/spaces/ICOM/pages/91848940/CC+Mesh+Generation
 
+	* Creating a ELM case that uses the new datasets
+		* Create a new case using ```--compset ICLM45 --res CLM_USRDAT```
+		* Point to the new domain file via
+		  ```
+		  ./xmlchange LND_DOMAIN_FILE=<name-of-domain-file>
+		  ./xmlchange ATM_DOMAIN_FILE=<name-of-domain-file>
+		  ./xmlchange LND_DOMAIN_PATH=<dir-path-to-domain-file>
+		  ./xmlchange ATM_DOMAIN_PATH=<dir-path-to-domain-file>
+		  ```
+		* Point to the surface dataset via
+		  ```
+		  cat >> user_nl_clm << EOF
+		  fsurdat = '<full-path-and-filename-of-new-surface-dataset>'
+		  EOF
+		  ```
+		* ```./case.setup``` and ```./case.build```
+
+7. User defined land + river grid
+
+8. User defined river grid
 
 
 
