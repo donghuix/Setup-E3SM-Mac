@@ -26,6 +26,10 @@
 	Note: Need to setup SSH key for Github: https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 5. Test case
+	* Create a ```.cime``` folder in home director
+
+	* Modify and copy ```config_compilers.xml``` and ```config_machines.xml``` to ```~/.cime/```
+
 	* Create a new case
 	```
 	export RES=1x1_brazil
@@ -65,5 +69,29 @@
 	./xmlchange -file env_run.xml -id DATM_CLMNCEP_YR_ALIGN -val 1
 	./xmlchange -file env_run.xml -id RUNDIR -val ${PWD}/run
 	```
+
+	* Do the setup
+	```
+	./case.setup
+	```
+
+	* Download the input data
+	```
+	./check_input_data --download
+	```
+
+	* Build the case
+	```
+	./case.build
+	```
+
+	* Run the case
+	```
+	./preview_run
+    ``` to see the command to run the case
+
+
+
+
 
 
