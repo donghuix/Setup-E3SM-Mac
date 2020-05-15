@@ -95,7 +95,7 @@
 6. User defined land grid
 	
 	* Creating surface dataset and domain file: https://github.com/bishtgautam/matlab-script-for-clm-sparse-grid
-		* This script generate a new mesh that comprises of two grids cells corresponding to two watersheds in our study region. The watersheds are shown in the first image on https://icom.atlassian.net/wiki/spaces/ICOM/pages/91848940/CC+Mesh+Generation
+		* Use this script to generate a new mesh that comprises of two grids cells corresponding to two watersheds in our study region. The watersheds are shown in the first image on https://icom.atlassian.net/wiki/spaces/ICOM/pages/91848940/CC+Mesh+Generation
 
 	* Creating a ELM case that uses the new datasets
 		* Create a new case using ```--compset ICLM45 --res CLM_USRDAT```
