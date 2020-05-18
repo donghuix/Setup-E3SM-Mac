@@ -120,6 +120,64 @@
 	
 	* Update the submodules: ```git submodule update --init```
 
+	* Download the following data from https://web.lcrc.anl.gov/public/e3sm/
+		```
+		domain.lnd.r05_oEC60to30v3.190418.nc
+		surfdata_0.5x0.5_simyr2000_c190418.nc
+		MOSART_global_half_20180721a.nc
+		```
+	* Create new case
+		```
+		RES=CLMMOS_USRDAT
+		COMPSET=ICLM45
+		MACH=mac
+		COMPILER=gnu
+		PROJECT=project
+		CASE_NAME=CLMMOS_USRDAT.01.`date "+%Y-%m-%d-%H%M%S"`
+		```
+		cd your-path-to-E3SM/cime/scripts
+		```
+		./create_newcase \
+		-case ${CASE_DIR}/${CASE_NAME} \
+		-res ${RES} \
+		-mach ${MACH} \
+		-compiler ${COMPILER} \
+		-compset ${COMPSET} 
+		-project ${PROJECT}
+		```
+	* Setup, Build, Submit
+		cd ${CASE_NAME}
+		```
+		./xmlchange -file env_run.xml -id DOUT_S             -val FALSE
+		./xmlchange -file env_run.xml -id INFO_DBUG          -val 2
+		```
+		```
+		./xmlchange CLM_USRDAT_NAME=test_r05_r05
+		./xmlchange LND_DOMAIN_FILE=domain.lnd.r05_oEC60to30v3.190418.nc
+		./xmlchange ATM_DOMAIN_FILE=domain.lnd.r05_oEC60to30v3.190418.nc
+		./xmlchange LND_DOMAIN_PATH=path-to-domain.lnd.r05_oEC60to30v3.190418.nc
+		./xmlchange ATM_DOMAIN_PATH=path-to-domain.lnd.r05_oEC60to30v3.190418.nc
+		```
+		```
+		cat >> user_nl_clm << EOF
+		fsurdat = 'path-and-filename-to-surfdata_0.5x0.5_simyr2000_c190418.nc'
+		EOF
+		```
+		```
+		cat >> user_nl_mosart << EOF
+		frivinp_rtm = 'path-and-filename-to-MOSART_global_half_20180721a.nc'
+		EOF
+		```
+		```
+		./case.setup
+		```
+		```
+		./case.build
+		```
+		```
+		./case.submit
+		```
+
 8. User defined river grid
 
 
