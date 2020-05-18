@@ -117,6 +117,8 @@
 7. User defined land + river grid
 	
 	* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat```
+	
+	* Update the submodules: ```git submodule update --init```
 
 8. User defined river grid
 
