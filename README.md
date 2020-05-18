@@ -1,4 +1,4 @@
-**Author: Donghui Xu** (<donghui.xu@pnnl.gov>)
+<!--- **Author: Donghui Xu** (<donghui.xu@pnnl.gov>) -->
 
 # Setup E3SM on Mac
 
