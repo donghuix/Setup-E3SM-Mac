@@ -3,9 +3,9 @@
 # Setup E3SM on Mac
 
 1. Xcode 
- - Download and install Xcode
- - Install Xcode command line developers tool by running the following command on terminal ```xcode-select --install``` and click on Install button
- - Launch Xcode and accept licence.
+	* Download and install Xcode
+	* Install Xcode command line developers tool by running the following command on terminal ```xcode-select --install``` and click on Install button
+	* Launch Xcode and accept licence.
 
 2. Install Package Manager
 	* Homebrew: open terminal and type ```ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"```
