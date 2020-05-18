@@ -115,6 +115,8 @@
 		* ```./case.setup``` and ```./case.build```
 
 7. User defined land + river grid
+	
+	* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat```
 
 8. User defined river grid
 
