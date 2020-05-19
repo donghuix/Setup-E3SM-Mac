@@ -98,7 +98,8 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 * Run the case
 	```
 	./preview_run
-	``` to see the command to run the case
+	``` 
+	to see the command to run the case
 
 ## 6. User defined land grid
 	
