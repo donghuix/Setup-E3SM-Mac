@@ -98,7 +98,7 @@
 		* Use this script to generate a new mesh that comprises of two grids cells corresponding to two watersheds in our study region. The watersheds are shown in the first image on https://icom.atlassian.net/wiki/spaces/ICOM/pages/91848940/CC+Mesh+Generation
 
 	* Creating a ELM case that uses the new datasets
-		* Create a new case using ```--compset ICLM45 --res CLM_USRDAT```
+		* Create a new case using ```--compset ICLM45 --res CLM_USRDAT --case ${CASE_NAME} --compiler ${COMPILER} --mach ${MACH}```
 		* Point to the new domain file via
 		  ```
 		  ./xmlchange LND_DOMAIN_FILE=<name-of-domain-file>
@@ -114,7 +114,7 @@
 		  ```
 		* ```./case.setup``` and ```./case.build```
 
-7. User defined land + river grid
+7. User defined land + river grid on Cori
 	
 	* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat```
 	
@@ -130,9 +130,9 @@
 		```
 		RES=CLMMOS_USRDAT
 		COMPSET=ICLM45
-		MACH=mac
+		MACH=cori-knl
 		COMPILER=gnu
-		PROJECT=project
+		PROJECT=project-name
 		CASE_NAME=CLMMOS_USRDAT.01.`date "+%Y-%m-%d-%H%M%S"`
 		```
 		cd your-path-to-E3SM/cime/scripts
@@ -179,6 +179,8 @@
 		```
 
 8. User defined river grid
+	
+	* Need to be added later
 
 
 
