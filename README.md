@@ -3,20 +3,27 @@
 # Setup E3SM on Mac
 
 **1. Xcode**
+
 	* Download and install Xcode
+
 	* Install Xcode command line developers tool by running the following command on terminal ```xcode-select --install``` and click on Install button
+
 	* Launch Xcode and accept licence.
 
 **2. Install Package Manager**
+
 	* Homebrew: open terminal and type ```ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"```
+
 	* MacPort: checkout https://github.com/bishtgautam/misc-scripts-for-acme/edit/master/md-notes/Setting-ACME-on-mac.md
 
 **3. Install packages with homebrew**
+
 	* brew install gcc cmake mpich netcdf
 
 	Note: If you see an error while running create_newcase that indicates perl can't find XML::LibXML, you may need to install p5-xml-libxml as well
 
 **4. Download E3SM code from github**
+
 	* git clone https://github.com/E3SM-Project/E3SM.git e3sm_trial 
 	* cd e3sm_trial
 	* git fetch origin
