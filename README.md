@@ -154,7 +154,9 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	-project ${PROJECT}
 	```
 * Setup, Build, Submit
+	```
 	cd ${CASE_NAME}
+	```
 	```
 	./xmlchange -file env_run.xml -id DOUT_S             -val FALSE
 	./xmlchange -file env_run.xml -id INFO_DBUG          -val 2
