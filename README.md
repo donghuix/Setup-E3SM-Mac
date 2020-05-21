@@ -131,9 +131,9 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 
 * Download the following data:
 	```
-	svn https://web.lcrc.anl.gov/public/e3sm/inputdata/share/domains domain.lnd.r05_oEC60to30v3.190418.nc
-	svn https://web.lcrc.anl.gov/public/e3sm/inputdata/lnd/clm2/surfdata_map/surfdata_0.5x0.5_simyr2000_c190418.nc
-	svn https://web.lcrc.anl.gov/public/e3sm/inputdata/rof/mosart/MOSART_global_half_20180721a.nc
+	wget https://web.lcrc.anl.gov/public/e3sm/inputdata/share/domains domain.lnd.r05_oEC60to30v3.190418.nc
+	wget https://web.lcrc.anl.gov/public/e3sm/inputdata/lnd/clm2/surfdata_map/surfdata_0.5x0.5_simyr2000_c190418.nc
+	wget https://web.lcrc.anl.gov/public/e3sm/inputdata/rof/mosart/MOSART_global_half_20180721a.nc
 	```
 * Create new case
 	```
