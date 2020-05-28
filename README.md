@@ -36,7 +36,7 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 
 * Create a ```.cime``` folder in home director
 
-* Modify and copy ```config_compilers.xml``` and ```config_machines.xml``` to ```~/.cime/```
+* Modify and copy ```config_compilers.xml``` and ```config_machines.xml``` from ```your-E3SM-dir/cime/config/e3sm/machines/userdefined_laptop_template/``` to ```~/.cime/```
 
 * Create a new case
 	```
