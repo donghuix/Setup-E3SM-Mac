@@ -170,6 +170,7 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	./xmlchange LND_DOMAIN_PATH=path-to-domain.lnd.r05_oEC60to30v3.190418.nc
 	./xmlchange ATM_DOMAIN_PATH=path-to-domain.lnd.r05_oEC60to30v3.190418.nc
 	```
+	May need to ```./xmlchange PIO_VERSION=1```
 	```
 	cat >> user_nl_clm << EOF
 	fsurdat = 'path-and-filename-to-surfdata_0.5x0.5_simyr2000_c190418.nc'
