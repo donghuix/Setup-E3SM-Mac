@@ -126,7 +126,7 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 
 ## 7. User defined land + river grid on Cori
 	
-* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat```
+* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat``` (this branch is already merged to master)
 
 * Update the submodules: ```git submodule update --init```
 
@@ -193,7 +193,7 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 
 ## 8. User defined river grid
 	
-* Need to be added later
+
 
 
 
