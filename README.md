@@ -192,6 +192,25 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	```
 
 ## 8. User defined river grid
+
+* Resolution and Compset
+	```
+	RES=MOS_USRDAT
+	COMPSET=RMOSGPCC
+	```
+* Provide ```LND_DOMAIN_FILE``` and ```ATM_DOMAIN_FILE``` that are consistent with domain of MOSART
+
+* dlnd.streams
+	Default dlnd.streams for ```COMPSET=RMOSGPCC``` is GPCC forcing, which locates at ```/compyfs/inputdata/lnd/dlnd7/hcru_hcru```
+
+	One can also change the forcing of runoff with user defined file by using the following lines:
+	```
+	cp ${CASE_DIR}/${CASE_NAME}/CaseDocs/dlnd.streams.txt.lnd.gpcc ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
+	chmod +rw ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
+	perl -w -i -p -e "s@/compyfs/inputdata/lnd/dlnd7/hcru_hcru@/compyfs/inputdata/lnd/dlnd7/NLDAS@" ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
+	perl -w -i -p -e "s@GPCC.daily.nc@Livneh_NLDAS_1915_2011.nc@" ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
+	sed -i '/ZBOT/d' ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
+	```
 	
 
 
