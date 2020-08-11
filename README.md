@@ -212,6 +212,14 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	perl -w -i -p -e "s@GPCC.daily.nc@Livneh_NLDAS_1915_2011.nc@" ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
 	sed -i '/ZBOT/d' ${CASE_DIR}/${CASE_NAME}/user_dlnd.streams.txt.lnd.gpcc
 	```
+
+	Change the start and end period for DATM and DLND
+	```
+	./xmlchange DATM_CLMNCEP_YR_START=2000
+	./xmlchange DATM_CLMNCEP_YR_END=2000
+	./xmlchange DLND_CPLHIST_YR_START=2000
+	./xmlchange DLND_CPLHIST_YR_END=2000
+	```
 	
 
 
