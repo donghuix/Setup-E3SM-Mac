@@ -1,4 +1,5 @@
 function [data, yr, mo, da] = read_usgs_streamflow(filename)
+% download with https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=14105700&startDT=1979-01-01
     fid = fopen(filename);
     C = textscan(fid,repmat('%s',1,25),'HeaderLines',44,'Delimiter','\t');
     data = C{22};
