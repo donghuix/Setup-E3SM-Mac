@@ -9,7 +9,7 @@
 % ####################################################################### %
 clear;close all;clc
 
-filename = 'GSIM_metadata.csv';
+filename = '~/DATA/GSIM_metadata/GSIM_metadata.csv';
 load coastlines.mat
 
 fid = fopen(filename);
