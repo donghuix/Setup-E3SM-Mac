@@ -52,8 +52,9 @@ while ~feof(fid) % feof(fid) is true when the file ends
 end
 s = strsplit(tline,',');
 fclose(fid); % close the file
-
-ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
+S = shaperead('/Users/xudo627/projects/Columbia_River_Basin/UQ_test/limite/amazlm_1608.shp');
+ind = inpolygon(lon,lat,S.X,S.Y);
+%ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
 
 bigriver = {'MACKENZIE RIVER', 'MISSISSIPPI RIVER', 'ORINOCO', 'NA', 'DANUBE RIVER', ...
             'VOLGA','OB','Godavari','YANGTZE RIVER (CHANG JIANG)', 'YENISEY', ...
