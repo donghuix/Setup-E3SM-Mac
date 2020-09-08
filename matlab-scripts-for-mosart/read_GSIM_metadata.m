@@ -53,7 +53,7 @@ end
 s = strsplit(tline,',');
 fclose(fid); % close the file
 
-ind = strcmp(river,'COLUMBIA RIVER'); ind = find(ind == 1);
+ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
 
 bigriver = {'MACKENZIE RIVER', 'MISSISSIPPI RIVER', 'ORINOCO', 'NA', 'DANUBE RIVER', ...
             'VOLGA','OB','Godavari','YANGTZE RIVER (CHANG JIANG)', 'YENISEY', ...
