@@ -54,6 +54,10 @@ s = strsplit(tline,',');
 fclose(fid); % close the file
 S = shaperead('/Users/xudo627/projects/Columbia_River_Basin/UQ_test/limite/amazlm_1608.shp');
 ind = inpolygon(lon,lat,S.X,S.Y);
+area_in = area(ind);
+gsim_in = gsim_no(ind);
+i = find(area_in == max(area_in));
+disp(gsim_in(i));
 %ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
 
 bigriver = {'MACKENZIE RIVER', 'MISSISSIPPI RIVER', 'ORINOCO', 'NA', 'DANUBE RIVER', ...
