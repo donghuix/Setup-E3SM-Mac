@@ -58,6 +58,8 @@ area_in = area(ind);
 gsim_in = gsim_no(ind);
 i = find(area_in == max(area_in));
 disp(gsim_in(i));
+disp(lon(i));
+dis[(lat(i));
 %ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
 
 bigriver = {'MACKENZIE RIVER', 'MISSISSIPPI RIVER', 'ORINOCO', 'NA', 'DANUBE RIVER', ...
