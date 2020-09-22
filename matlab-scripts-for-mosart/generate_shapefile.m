@@ -17,6 +17,7 @@ function S = generate_shapefile(X,Y,dnID,ID,filename)
             S(k).dire = k - 1;
             S(k).BoundingBox = [min(xcr,xdn) min(ycr,ydn); max(xcr,xdn) max(ycr,ydn)];
             i2 = [];
+            k = k + 1;
         end
     end
     shapewrite(S,filename);

@@ -19,6 +19,9 @@ function fname_out = CreateMOSARTUgridInputForE3SM2(...
 
 latixy = ncread(mosart_gridded_surfdata_filename,'latixy');
 longxy = ncread(mosart_gridded_surfdata_filename,'longxy');
+areaTotal = ncread(mosart_gridded_surfdata_filename,'areaTotal2');
+areaTotal_region = areaTotal(in);
+ioutlet = find(areaTotal_region == max(areaTotal_region));
 
 if ischar(in)
     if ~isexist(in)
@@ -151,6 +154,15 @@ for ivar = 1:nvars
                     else
                         dnID_region(i) = ID_region(ind);
                     end
+                end
+            end
+            for ict = 1 : length(dnID_region)
+                idn = ict;
+                while dnID_region(idn) ~= -9999
+                    idn = dnID_region(idn);
+                end
+                if idn ~= ioutlet
+                    dnID_region(ict) = -9999;
                 end
             end
             netcdf.putVar(ncid_out,ivar-1,dnID_region);
