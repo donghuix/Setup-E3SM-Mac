@@ -1,12 +1,17 @@
-function show_river_network(dnID,ID,longxy,latixy,col)
+function show_river_network(fname,col)
     
-    if nargin < 5
+    if nargin < 2
         col = 'b-';
     end
+    dnID   = ncread(fname,'dnID');
+    ID     = ncread(fname,'ID');
+    latixy = ncread(fname,'latixy');
+    longxy = ncread(fname,'longxy');
+    [m,n] = size(dnID);
     
-    if ndims(dnID) == 1
+    if m> 1 && n == 1
         show_river_1d(dnID,ID,longxy,latixy,col)
-    elseif ndims(dnID) == 2
+    elseif m > 1 && n > 1
         show_river_2d(dnID,ID,longxy,latixy,col)
     end
     
