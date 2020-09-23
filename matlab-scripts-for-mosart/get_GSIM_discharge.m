@@ -1,4 +1,4 @@
-function [yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station)
+function [lon,lat,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station)
 
     filename = fullfile('/Users/xudo627/DATA/GSIM_indices/TIMESERIES/monthly',strcat(station,'.mon'));
     fid = fopen(filename);
@@ -30,6 +30,19 @@ function [yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station)
             sd(i) = str2double(S{i});
             cv(i) = str2double(V{i});
         end
+    end
+    
+    fid = fopen(filename);
+    tline = fgetl(fid);
+    while ischar(tline)
+        if contains(tline,'latitude')
+            strs = strsplit(tline,':');
+            lat  = str2double(strs{2});
+        elseif contains(tline,'longitude')
+            strs = strsplit(tline,':');
+            lon  = str2double(strs{2});
+        end
+        tline = fgetl(fid);
     end
     
 end
