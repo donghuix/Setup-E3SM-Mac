@@ -52,14 +52,22 @@ while ~feof(fid) % feof(fid) is true when the file ends
 end
 s = strsplit(tline,',');
 fclose(fid); % close the file
-S = shaperead('/Users/xudo627/projects/Columbia_River_Basin/UQ_test/limite/amazlm_1608.shp');
+%S = shaperead('/Users/xudo627/projects/Columbia_River_Basin/UQ_test/limite/amazlm_1608.shp');
+S = shaperead('/Users/xudo627/projects/Susquehanna/watershed/boundary.shp');
 ind = inpolygon(lon,lat,S.X,S.Y);
+ind = find(ind == 1);
 area_in = area(ind);
 gsim_in = gsim_no(ind);
-i = find(area_in == max(area_in));
+%i = find(area_in == max(area_in));
+dist = pdist2([lon(ind)' lat(ind)'],[-76 40]);
+[dists,i] = sort(dist);
+i = i(1:3);
 disp(gsim_in(i));
-disp(lon(i));
-dis[(lat(i));
+disp(lon(ind(i)));
+disp(lat(ind(i)));
+figure;
+plot(S.X,S.Y,'k-','LineWidth',2); hold on;
+plot(lon(ind),lat(ind),'ro');
 %ind = strcmp(river,'AMAZON'); ind = find(ind == 1);
 
 bigriver = {'MACKENZIE RIVER', 'MISSISSIPPI RIVER', 'ORINOCO', 'NA', 'DANUBE RIVER', ...
