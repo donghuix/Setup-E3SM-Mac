@@ -11,7 +11,7 @@
 % 08/06/2020
 % ======================================================================= %
 function fname_out = CreateMOSARTUgridInputForE3SM3(...
-                    latixy_region,longxy_region,ID,dnID, areatotal, fdir, ...
+                    latixy_region,longxy_region,ID,dnID, areatotal, fdir, area, ...
                     mosart_gridded_surfdata_filename, ...
                     out_netcdf_dir, mosart_usrdat_name)
 
@@ -93,6 +93,8 @@ for ivar = 1:nvars
             netcdf.putVar(ncid_out,ivar-1,areatotal);
         case {'fdir'}
             netcdf.putVar(ncid_out,ivar-1,fdir);
+        case {'area'}
+            netcdf.putVar(ncid_out,ivar-1,area);
         otherwise
             datav = griddata(longxy,latixy,data,longxy_region,latixy_region,'nearest');
             %[varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
