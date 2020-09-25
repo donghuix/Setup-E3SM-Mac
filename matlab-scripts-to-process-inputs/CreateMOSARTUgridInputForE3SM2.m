@@ -32,9 +32,14 @@ if ischar(in)
     in = inpolygon(longxy,latixy,S.X,S.Y);
 end
 
+if islogical(in)
+    ncells = sum(in(:));
+else
+    ncells = length(in);
+end
 ID     = ncread(mosart_gridded_surfdata_filename,'ID');
 dnID   = ncread(mosart_gridded_surfdata_filename,'dnID');
-ID_region = 1 : sum(in(:));
+ID_region = 1 : ncells;
 ID_region = ID_region';
 
 fname_out = sprintf('%s/MOSART_%s_%s.nc',out_netcdf_dir,mosart_usrdat_name,datestr(now, 'cyymmdd'));
@@ -57,7 +62,7 @@ info_inp = ncinfo(mosart_gridded_surfdata_filename);
 %                           Define dimensions
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-dimid(1) = netcdf.defDim(ncid_out,'gridcell',sum(in(:)));
+dimid(1) = netcdf.defDim(ncid_out,'gridcell',ncells);
 % dimid(1) = netcdf.defDim(ncid_out,'lat',1);
 % dimid(2) = netcdf.defDim(ncid_out,'lon',sum(in(:)));
 
@@ -173,7 +178,7 @@ for ivar = 1:nvars
 end
 
 if read_ele == 1
-ele = zeros(sum(in(:)),11);
+ele = zeros(ncells,11);
     for i = 1 : 11
         data = ncread(mosart_gridded_surfdata_filename,strcat('ele',num2str(i-1)));
         ele(:,i) = data(in);
