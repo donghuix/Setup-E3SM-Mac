@@ -30,7 +30,7 @@ iymax  = find(abs(lat - ymax) == min(abs(lat-ymax)));
 
 latlen = iymax - iymin + 1;
 lonlen = ixmax - ixmin + 1;
-midstr = strcat(num2str(lonlen),'x',num2str('latlen'),'_grid');
+midstr = strcat(num2str(lonlen),'x',num2str(latlen),'_grid');
 
 fname_out = sprintf('%s/surfdata_%s_%s_%s.nc',...
             out_netcdf_dir,clm_usrdat_name,midstr,datestr(now, 'cyymmdd'));
