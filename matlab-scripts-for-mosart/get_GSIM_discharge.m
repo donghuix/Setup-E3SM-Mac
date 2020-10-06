@@ -1,5 +1,6 @@
-function [lon,lat,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station)
-
+function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station)
+    
+    Sh = shaperead(['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station '.shp']);
     filename = fullfile('/Users/xudo627/DATA/GSIM_indices/TIMESERIES/monthly',strcat(station,'.mon'));
     fid = fopen(filename);
     C = textscan(fid,'%s%s%s%s%s%s%s%s%s%d%d','HeaderLines',22,'Delimiter',',');
