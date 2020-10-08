@@ -12,6 +12,8 @@ function data = cat_elm(files,varnames)
                 netcdf.close(ncid);
                 if strcmp(dimname,'gridcell')
                     ndim = 1;
+                else
+                    ndim = 2;
                 end
             else
                 data.(varnames{j}) = cat(ndim+1,data.(varnames{j}),ncread(filename,varnames{j}));
