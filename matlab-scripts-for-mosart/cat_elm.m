@@ -3,6 +3,7 @@ function data = cat_elm(files,varnames)
     data = struct([]);
     for i = 1 : length(files)
         filename = fullfile(files(i).folder,files(i).name);
+        fprintf([filename '\n']);
         for j = 1 : length(varnames)
             if i == 1
                 data(1).(varnames{j}) = ncread(filename,varnames{j});
@@ -17,4 +18,5 @@ function data = cat_elm(files,varnames)
             end
         end
     end
+    
 end
