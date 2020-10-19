@@ -41,21 +41,21 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 4;
-    varid(ivar) = netcdf.defVar(ncid_out,'lat',6,[dimid(1))]); 
+    varid(ivar) = netcdf.defVar(ncid_out,'lat',6,[dimid(1)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_north');
     netcdf.putAtt(ncid_out,ivar-1,'axis','Y');
     
     ivar = 5;
-    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,[dimid(2))]); 
+    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,[dimid(2)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_east');
     netcdf.putAtt(ncid_out,ivar-1,'axis','X');
     
     ivar = 6;
-    varid(ivar) = netcdf.defVar(ncid_out,'time',6,[dimid(3))]); 
+    varid(ivar) = netcdf.defVar(ncid_out,'time',6,[dimid(3)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','time');
     if isleap
         netcdf.putAtt(ncid_out,ivar-1,'calendar','gregorian');
