@@ -1,4 +1,6 @@
-function [outputArg1,outputArg2] = generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
+function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
+
+% startdate should be yyyy-mm-dd format
     
     QRUNOFF = QOVER + QDRAI; % total runoff is the sum of surface and subsurface runoff
     [nlon,nlat,nt] = size(QDRAI);
@@ -53,25 +55,14 @@ function [outputArg1,outputArg2] = generate_dlnd(QDRAI,QOVER,lat,lon,time,startd
     netcdf.putAtt(ncid_out,ivar-1,'axis','X');
     
     ivar = 6;
-    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,[dimid(3))]); 
+    varid(ivar) = netcdf.defVar(ncid_out,'time',6,[dimid(3))]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','time');
     if isleap
         netcdf.putAtt(ncid_out,ivar-1,'calendar','gregorian');
     else
         netcdf.putAtt(ncid_out,ivar-1,'calendar','noleap');
     end
-    [yr,mo,da] = datevec(startdate);
-    if mo < 10
-        mo = strcat('0',num2str(mo));
-    else
-        mo = num2str(mo);
-    end
-    if da < 10
-        da = strcat('0',num2str(da));
-    else
-        da = num2str(da);
-    end
-    netcdf.putAtt(ncid_out,ivar-1,'units',['days since ' num2str(yr) '-' mo '-' da ' 00:00:00']);
+    netcdf.putAtt(ncid_out,ivar-1,'units',['days since ' startdate ' 00:00:00']);
     netcdf.putAtt(ncid_out,ivar-1,'axis','T');
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
