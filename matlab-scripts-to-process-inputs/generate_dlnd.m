@@ -70,7 +70,20 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
 %                           Copy variables
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+    ivar = 1;
+    netcdf.putVar(ncid_out,ivar-1,QDRAI);
+    ivar = 2;
+    netcdf.putVar(ncid_out,ivar-1,QOVER);
+    ivar = 3;
+    netcdf.putVar(ncid_out,ivar-1,QRUNOFF);
+    ivar = 4;
+    netcdf.putVar(ncid_out,ivar-1,lat);
+    ivar = 5;
+    netcdf.putVar(ncid_out,ivar-1,lon);
+    ivar = 6;
+    netcdf.putVar(ncid_out,ivar-1,time);
+    
+    netcdf.close(ncid_out);
     
 end
 
