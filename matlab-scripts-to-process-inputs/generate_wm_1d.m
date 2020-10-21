@@ -116,7 +116,9 @@ for ivar = 1:nvars
             netcdf.putVar(ncid_out,ivar-1,lat);
         case {'lon'}
             netcdf.putVar(ncid_out,ivar-1,lon);
-        case {'Qmon','demand','distance','gridID_from_Dam_sorted'}
+        case {'Qmon'}
+            netcdf.putVar(ncid_out,ivar-1,data(Dams_in,:));
+        case {'demand','distance','gridID_from_Dam_sorted'}
             netcdf.putVar(ncid_out,ivar-1,data(Dams_in,:));
         case {'DependentGrids','Month'}
             netcdf.putVar(ncid_out,ivar-1,data);
