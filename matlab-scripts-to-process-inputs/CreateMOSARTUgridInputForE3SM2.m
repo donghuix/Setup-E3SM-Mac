@@ -63,6 +63,7 @@ info_inp = ncinfo(mosart_gridded_surfdata_filename);
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 dimid(1) = netcdf.defDim(ncid_out,'gridcell',ncells);
+dimid(2) = netcdf.defDim(ncid_out,'nele',11);
 % dimid(1) = netcdf.defDim(ncid_out,'lat',1);
 % dimid(2) = netcdf.defDim(ncid_out,'lon',sum(in(:)));
 
@@ -74,7 +75,11 @@ dimid(1) = netcdf.defDim(ncid_out,'gridcell',ncells);
 read_ele = 0;
 for ivar = 1 : nvars
     [varname,xtype,dimids,natts] = netcdf.inqVar(ncid_inp,ivar-1);
-    varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimid(1));
+    if strcmp(varname,'ele')
+        varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,[dimid(1),dimid(2)]);
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimid(1));
+    end
 %     switch varname
 %         case {'lat'}
 %             varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimid(1));
@@ -95,8 +100,8 @@ for ivar = 1 : nvars
     end
     
 end
-if read_ele == 1
-    dimid(2) = netcdf.defDim(ncid_out,'nele',11);
+if read_ele == 1 && ~any(contains(varnames,'ele'))
+    fprintf(['ele not found, estimate from ele0...ele10']);
     varid(nvars+1) = netcdf.defVar(ncid_out,'ele',xtype,[dimid(1),dimid(2)]);
 end
 %{
@@ -143,6 +148,15 @@ for ivar = 1:nvars
     switch varname
         case {'lat','lon'}
             continue;
+        case {'ele'}
+            ele_region = NaN(ncells,11);
+            for i = 1 : 11
+                tmp = data(:,:,i);
+                tmp = tmp(in);
+                assert(length(tmp) == ncells);
+                ele_region(:,i) = tmp;
+            end
+            netcdf.putVar(ncid_out,ivar-1,ele_region);
         case {'ID'}
             netcdf.putVar(ncid_out,ivar-1,ID_region);
         case {'dnID'}
@@ -177,7 +191,7 @@ for ivar = 1:nvars
     end
 end
 
-if read_ele == 1
+if read_ele == 1 && ~any(contains(varnames,'ele'))
 ele = zeros(ncells,11);
     for i = 1 : 11
         data = ncread(mosart_gridded_surfdata_filename,strcat('ele',num2str(i-1)));
