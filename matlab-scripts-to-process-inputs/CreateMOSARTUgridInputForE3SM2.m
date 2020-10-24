@@ -73,10 +73,12 @@ dimid(2) = netcdf.defDim(ncid_out,'nele',11);
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 read_ele = 0;
+found_ele = 0;
 for ivar = 1 : nvars
     [varname,xtype,dimids,natts] = netcdf.inqVar(ncid_inp,ivar-1);
     if strcmp(varname,'ele')
         varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,[dimid(1),dimid(2)]);
+        found_ele = 1;
     else
         varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimid(1));
     end
@@ -100,7 +102,8 @@ for ivar = 1 : nvars
     end
     
 end
-if read_ele == 1 && ~any(contains(varnames,'ele'))
+ 
+if read_ele == 1 && found_ele == 0
     fprintf(['ele not found, estimate from ele0...ele10']);
     varid(nvars+1) = netcdf.defVar(ncid_out,'ele',xtype,[dimid(1),dimid(2)]);
 end
@@ -191,7 +194,7 @@ for ivar = 1:nvars
     end
 end
 
-if read_ele == 1 && ~any(contains(varnames,'ele'))
+if read_ele == 1 && found_ele == 0
 ele = zeros(ncells,11);
     for i = 1 : 11
         data = ncread(mosart_gridded_surfdata_filename,strcat('ele',num2str(i-1)));
