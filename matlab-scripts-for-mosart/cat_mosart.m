@@ -3,7 +3,7 @@ function [data,iout] = cat_mosart(files,varnames)
     data = struct([]);
     for i = 1 : length(files)
         filename = fullfile(files(i).folder,files(i).name);
-        fprintf([filename '\n'])
+        fprintf([files(i).name '\n'])
         for j = 1 : length(varnames)
             if i == 1
                 areatotal = ncread(filename,'areatotal2');
