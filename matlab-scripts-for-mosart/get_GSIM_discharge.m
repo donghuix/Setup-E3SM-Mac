@@ -10,8 +10,8 @@ function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station,read_bounda
         addpath('/Users/xudo627/donghui/CODE/m_map/');
         fname = ['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station];
         M=m_shaperead(fname);
-        Sh(1).X = M.ncst(:,1);
-        Sh(2).Y = M.ncst(:,2);
+        Sh(1).X = M.ncst{1}(:,1);
+        Sh(1).Y = M.ncst{1}(:,2);
     elseif read_boundary == 1
         Sh = shaperead(['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station '.shp']);
     end
