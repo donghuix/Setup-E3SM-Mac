@@ -1,4 +1,4 @@
-function [frac_in, yr, mo] = get_GIEMS_inundation(S)
+function [frac_in, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S)
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/mylib/m/');
     addpath('/Users/xudo627/projects/topotoolbox/colormaps/');
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/CODE/Setup-E3SM-Mac/matlab-scripts-for-mosart/');
@@ -13,6 +13,8 @@ function [frac_in, yr, mo] = get_GIEMS_inundation(S)
     
     % find the index corresponding to the cells inside the given boundary
     in = inpolygon(longxy,latixy,S.X,S.Y);
+    lat_in = latixy(in);
+    lon_in = longxy(in);
     
     k = 1;
     for i = 1993 : 2007
@@ -23,7 +25,7 @@ function [frac_in, yr, mo] = get_GIEMS_inundation(S)
         end
     end
     
-    frac_in = NaN(length(in),num_of_months);
+    frac_in = NaN(sum(in(:)),num_of_months);
     
     for i = 1 : num_of_months
         tmp = alternative_giems_1993_2007(:,:,i);
