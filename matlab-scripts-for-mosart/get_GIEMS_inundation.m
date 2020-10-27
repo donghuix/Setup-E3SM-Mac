@@ -47,6 +47,7 @@ function [frac_in, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
         for i = 1 : num_of_months
             tmp = alternative_giems_1993_2007(:,:,i);
             tmp(tmp < 0) = 0;
+            tmp = fliplr(tmp);
             tmp = convert_res(tmp,1,2)./4;
             frac_in(:,i) = tmp(in);
         end
