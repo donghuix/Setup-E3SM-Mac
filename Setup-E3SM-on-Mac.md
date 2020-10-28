@@ -22,6 +22,12 @@
 
 Note: If you see an error while running create_newcase that indicates perl can't find XML::LibXML, you may need to install p5-xml-libxml as well
 
+Note for install XML::LibXML 
+	```
+	brew install libxml2
+	cpan XML::LibXML
+	```
+
 ## 4. Download E3SM code from github
 
 * git clone https://github.com/E3SM-Project/E3SM.git e3sm_trial 
