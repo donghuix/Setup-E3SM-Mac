@@ -14,7 +14,15 @@
 function fname_out = CreateCLMUgridSurfdatForE3SM(...
                     in,...
                     clm_gridded_surfdata_filename, ...
-                    out_netcdf_dir, clm_usrdat_name)
+                    out_netcdf_dir, clm_usrdat_name,fdrain)
+
+if nargin == 4
+    fdrain = [];
+    write_fdrain = 0;
+end
+if ~isempty(fdrain)
+    write_fdrain = 1;
+end
 
 % Default dimension is lon * lat
 latixy = ncread(clm_gridded_surfdata_filename,'LATIXY');
@@ -104,6 +112,10 @@ for ivar = 1:nvars
         end
     end
     varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimids);
+    if strcmp(varname,'AREA')
+        fdrain_dimids = dimids;
+        fdrain_type = xtype;
+    end
     varnames{ivar} = varname;
     %disp([num2str(ivar) ') varname : ' varname ' ' num2str(dimids)])
     
@@ -115,6 +127,13 @@ for ivar = 1:nvars
     end
     
 end
+if write_fdrain
+    ivar = nvars + 1;
+    fdrainid = netcdf.defVar(ncid_out,'fdrain',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','subsurface drainage decay factor');
+    netcdf.putAtt(ncid_out,ivar-1,'unites','m-1');
+end
+
 varid = netcdf.getConstant('GLOBAL');
 
 [~,user_name]=system('echo $USER');
@@ -286,6 +305,11 @@ for ivar = 1:nvars
                     disp('error')
             end
     end
+end
+
+if write_fdrain
+    ivar = nvars + 1;
+    netcdf.putVar(ncid_out,ivar-1,fdrain);
 end
 
 % close files
