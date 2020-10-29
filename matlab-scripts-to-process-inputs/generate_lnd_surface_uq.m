@@ -1,4 +1,4 @@
-function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot)
+function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot,fdrain)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
@@ -84,6 +84,10 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot)
                 error('check dimension');
         end
         %fprintf([varname ': ' num2str(size(data)) '\n']);
+        if strcmp(varname,'fdrain')
+            disp('fdrain is found!!!\n\n');
+            data = fdrain;
+        end
         netcdf.putVar(ncid_out,ivar-1,data);
     end
 
