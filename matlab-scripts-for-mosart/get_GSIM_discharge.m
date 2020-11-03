@@ -9,11 +9,22 @@ function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station,read_bounda
         Sh = struct([]);
         addpath('/Users/xudo627/donghui/CODE/m_map/');
         fname = ['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station];
-        M=m_shaperead(fname);
-        Sh(1).X = M.ncst{1}(:,1);
-        Sh(1).Y = M.ncst{1}(:,2);
+        if exist([fname '.shp'],'file')
+            M=m_shaperead(fname);
+            Sh(1).X = M.ncst{1}(:,1);
+            Sh(1).Y = M.ncst{1}(:,2);
+        else
+            Sh(1).X =NaN;
+            Sh(1).Y =NaN;
+        end
     elseif read_boundary == 1
-        Sh = shaperead(['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station '.shp']);
+        fname = ['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station '.shp'];
+        if exist(fname,'file')
+            Sh = shaperead(fname);
+        else
+            Sh(1).X =NaN;
+            Sh(1).Y =NaN;
+        end
     end
     filename = fullfile('/Users/xudo627/DATA/GSIM_indices/TIMESERIES/monthly',strcat(station,'.mon'));
     fid = fopen(filename);
@@ -59,5 +70,5 @@ function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station,read_bounda
         end
         tline = fgetl(fid);
     end
-    
+    fclose(fid);
 end
