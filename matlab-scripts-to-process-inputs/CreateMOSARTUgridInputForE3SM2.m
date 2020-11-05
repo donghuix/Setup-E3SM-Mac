@@ -15,7 +15,12 @@
 function fname_out = CreateMOSARTUgridInputForE3SM2(...
                     in, ...
                     mosart_gridded_surfdata_filename, ...
-                    out_netcdf_dir, mosart_usrdat_name)
+                    out_netcdf_dir, mosart_usrdat_name,include_all_cells)
+
+if nargin == 4
+    include_all_cells = 0; % 0: find all the cells corresponding to the outlet
+                           % 1: use all the cells in the areas
+end
 
 latixy = ncread(mosart_gridded_surfdata_filename,'latixy');
 longxy = ncread(mosart_gridded_surfdata_filename,'longxy');
@@ -178,13 +183,15 @@ for ivar = 1:nvars
                     end
                 end
             end
-            for ict = 1 : length(dnID_region)
-                idn = ict;
-                while dnID_region(idn) ~= -9999
-                    idn = dnID_region(idn);
-                end
-                if idn ~= ioutlet
-                    dnID_region(ict) = -9999;
+            if include_all_cells == 0
+                for ict = 1 : length(dnID_region)
+                    idn = ict;
+                    while dnID_region(idn) ~= -9999
+                        idn = dnID_region(idn);
+                    end
+                    if idn ~= ioutlet
+                        dnID_region(ict) = -9999;
+                    end
                 end
             end
             netcdf.putVar(ncid_out,ivar-1,dnID_region);
