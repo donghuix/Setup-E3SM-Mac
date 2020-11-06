@@ -154,8 +154,10 @@ for ivar = 1:nvars
     [varname,vartype,vardimids,varnatts]=netcdf.inqVar(ncid_inp,ivar-1);
     data = netcdf.getVar(ncid_inp,ivar-1);
     switch varname
-        case {'lat','lon'}
-            continue;
+        case {'lat'}
+            netcdf.putVar(ncid_out,ivar-1,latixy(in));
+        case {'lon'}
+            netcdf.putVar(ncid_out,ivar-1,longxy(in));
         case {'ele'}
             ele_region = NaN(ncells,11);
             for i = 1 : 11
