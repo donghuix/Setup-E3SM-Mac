@@ -29,8 +29,10 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
     longxy = ncread(fname,'longxy');
     area   = ncread(fname,'area');
     
-    if target_area < nanmean(area)
-        target_area = [];
+    if ~isempty(target_area)
+        if target_area < nanmean(area)
+            target_area = [];
+        end
     end
     
     [m,n] = size(dnID);
