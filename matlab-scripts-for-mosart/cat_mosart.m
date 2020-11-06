@@ -1,7 +1,7 @@
 function [data,iout] = cat_mosart(files,varnames,icontributing)
     
     if nargin == 2
-        ioutlet = [];
+        icontributing = [];
     end
     data = struct([]);
     if isempty(icontributing)
