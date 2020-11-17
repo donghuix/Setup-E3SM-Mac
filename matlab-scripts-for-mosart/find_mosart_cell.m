@@ -44,7 +44,7 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
     if isempty(target_area)
         search_N = 1;
     else
-        search_N = 10;
+        search_N = 20;
     end
     
     for ifound = 1 : search_N
