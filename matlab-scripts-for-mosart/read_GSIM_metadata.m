@@ -54,8 +54,10 @@ s = strsplit(tline,',');
 fclose(fid); % close the file
 %S = shaperead('/Users/xudo627/projects/Columbia_River_Basin/UQ_test/limite/amazlm_1608.shp');
 %S = shaperead('/Users/xudo627/projects/Susquehanna/watershed/boundary.shp');
-load('/Users/xudo627/projects/Conference/2020 ESMD_E3SM PI Meeting/Change.mat','xc3','yc3','k')
-S.X = xc3(k); S.Y = yc3(k);
+% load('/Users/xudo627/projects/Conference/2020 ESMD_E3SM PI Meeting/Change.mat','xc3','yc3','k')
+% S.X = xc3(k); S.Y = yc3(k);
+load('/Users/xudo627/projects/Global_WM_inund/data/major_basins.mat');
+S.X = major_basins(13).X;S.Y = major_basins(13).Y;
 ind = inpolygon(lon,lat,S.X,S.Y);
 ind = find(ind == 1);
 area_in = area(ind);
