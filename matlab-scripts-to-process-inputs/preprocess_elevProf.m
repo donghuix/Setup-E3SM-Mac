@@ -1,9 +1,14 @@
-function [e_eprof3,a_eprof3] = preprocess_elevProf (fname)
-    rdep = ncread(filename,'rdep');
-    rwid = ncread(filename,'rwid');
-    area = ncread(filename,'area');
-    rlen = ncread(filename,'rlen');
-    e_eprof  = ncread(filename,'ele');
+function [e_eprof3,a_eprof3] = preprocess_elevProf (fname,debug)
+    
+    if nargin == 1
+        debug =0;
+    end
+    
+    rdep = ncread(fname,'rdep');
+    rwid = ncread(fname,'rwid');
+    area = ncread(fname,'area');
+    rlen = ncread(fname,'rlen');
+    e_eprof  = ncread(fname,'ele');
     
     threshold_slpRatio = 10;
     a_chnl_max = 0.70;
@@ -29,7 +34,7 @@ function [e_eprof3,a_eprof3] = preprocess_elevProf (fname)
     for i = 1 : numr
         a_chnl(i) = rwid(i)*rlen(i)/area(i);
         if a_chnl(i) - a_chnl_max > 1e-5
-            fprintf(['Fix river width for cell ' num2str(i) '\n']);
+            %fprintf(['Fix river width for cell ' num2str(i) '\n']);
             rwid(i) = area(i) * a_chnl_max / rlen(i); 
             a_chnl(i) = a_chnl_max;
         end
@@ -69,8 +74,9 @@ function [e_eprof3,a_eprof3] = preprocess_elevProf (fname)
             if abs(e_eprof3(iu,j+1) - e_eprof3(iu,j)) > 1e-10
                 alfa3(iu,j) = (a_eprof3(iu, j+1) - a_eprof3(iu, j)) / (e_eprof3(iu, j+1) - e_eprof3(iu, j));
             else
-                bad_i = [bad_i; iu];
-                fprintf(['ERROR: Dvided by zero: iu = ' num2str(iu) ', j= ' num2str(j) '\n']);
+                if debug == 1
+                    fprintf(['ERROR: Dvided by zero: iu = ' num2str(iu) ', j= ' num2str(j) '\n']);
+                end
             end
         end
     end
