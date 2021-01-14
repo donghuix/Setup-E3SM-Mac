@@ -16,9 +16,8 @@ function [data,iout] = cat_mosart(files,varnames,icontributing)
                     ncid = netcdf.open(filename,'NC_NOWRITE');
                     [dimname, dimlen] = netcdf.inqDim(ncid,0);
                     netcdf.close(ncid);
-                    if strcmp(dimname,'gridcell')
-                        ndim = 1;
-                    end
+                    dims = size(data(1).(varnames{j}));
+                    ndim = length(dims);
                 else
                     data.(varnames{j}) = cat(ndim+1,data.(varnames{j}),ncread(filename,varnames{j}));
                 end
@@ -57,7 +56,8 @@ function [data,iout] = cat_mosart(files,varnames,icontributing)
                             areatotal = ncread(filename,'areatotal2');
                             iout(k)   = find(areatotal(icontributing(k).icontributing) == max(areatotal(icontributing(k).icontributing)));
                             data(k).(varnames{j}) = tmp(icontributing(k).icontributing);
-                            ndim = 1;
+                            dims = size(data(1).(varnames{j}));
+                            ndim = length(dims);
                             if length(size(tmp)) > ndim + 1
                                 error('dimension error');
                             end
