@@ -47,19 +47,19 @@ function [data,isgrid2d] = cat_elm(files,varnames,ind)
                             if irow == 1
                                 tmpall = tmpread(row(irow),col(irow),:);
                             else
-                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow)));
+                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow),:));
                             end
                         elseif ndim == 4
                             if irow == 1
                                 tmpall = tmpread(row(irow),col(irow),:,:);
                             else
-                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow)));
+                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow),:,:));
                             end
                         elseif ndim == 5
                             if irow == 1
                                 tmpall = tmpread(row(irow),col(irow),:,:,:);
                             else
-                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow)));
+                                tmpall = cat(1, tmpall, tmpread(row(irow),col(irow),:,:,:));
                             end
                         else
                             error('check output dimension!!!');
