@@ -16,7 +16,6 @@ function [data,isgrid2d] = cat_elm(files,varnames,ind)
                 ndim = length(dims);
                 ncid = netcdf.open(filename,'NC_NOWRITE');
                 [dimname, nx] = netcdf.inqDim(ncid,0);
-                netcdf.close(ncid);
                 if strcmp(dimname,'lndgrid')
                     isgrid2d = 0;
                 elseif strcmp(dimname,'lon')
@@ -26,6 +25,7 @@ function [data,isgrid2d] = cat_elm(files,varnames,ind)
                         [row,col] = ind2sub([nx,ny],ind);
                     end
                 end
+                netcdf.close(ncid);
             end
             tmpread = ncread(filename,varnames{j});
             if readall == 1
