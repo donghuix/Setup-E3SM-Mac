@@ -81,11 +81,7 @@ function [data,isgrid2d] = cat_elm(files,varnames,ind)
                 if i == 1
                     data(1).(varnames{j}) = tmpall;
                 else
-                    if isgrid2d == 1
-                        data.(varnames{j}) = cat(ndim,data.(varnames{j}),tmpall);
-                    elseif isgrid2d == 0
-                        data.(varnames{j}) = cat(ndim+1,data.(varnames{j}),tmpall);
-                    end
+                    data.(varnames{j}) = cat(ndim+1,data.(varnames{j}),tmpall);
                 end
             end
         end
