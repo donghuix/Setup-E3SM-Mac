@@ -10,12 +10,13 @@ function [data,iout] = cat_mosart(files,varnames,icontributing)
             fprintf([files(i).name '\n'])
             for j = 1 : length(varnames)
                 if i == 1
-                    areatotal = ncread(filename,'areatotal2');
-                    iout = find(areatotal == max(areatotal));
+%                     areatotal = ncread(filename,'areatotal2');
+%                     iout = find(areatotal == max(areatotal));
+                    iout = -9999;
                     data(1).(varnames{j}) = ncread(filename,varnames{j});
-                    ncid = netcdf.open(filename,'NC_NOWRITE');
-                    [dimname, dimlen] = netcdf.inqDim(ncid,0);
-                    netcdf.close(ncid);
+%                     ncid = netcdf.open(filename,'NC_NOWRITE');
+%                     [dimname, dimlen] = netcdf.inqDim(ncid,0);
+%                     netcdf.close(ncid);
                     dims = size(data(1).(varnames{j}));
                     ndim = length(dims);
                 else
