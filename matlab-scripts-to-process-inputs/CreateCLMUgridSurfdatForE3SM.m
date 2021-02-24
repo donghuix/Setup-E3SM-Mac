@@ -14,14 +14,28 @@
 function fname_out = CreateCLMUgridSurfdatForE3SM(...
                     in,...
                     clm_gridded_surfdata_filename, ...
-                    out_netcdf_dir, clm_usrdat_name,fdrain)
+                    out_netcdf_dir, clm_usrdat_name,fdrain,max_drain,ice_imped)
 
 if nargin == 4
     fdrain = [];
     write_fdrain = 0;
 end
+if nargin == 5
+    max_drain = [];
+    write_max_drain = 0;
+end
+if nargin == 6
+    ice_imped = [];
+    write_ice_imped = 0;
+end
 if ~isempty(fdrain)
     write_fdrain = 1;
+end
+if ~isempty(max_drain)
+    write_max_drain = 1;
+end
+if ~isempty(ice_imped)
+    write_ice_imped = 1;
 end
 
 % Default dimension is lon * lat
@@ -131,6 +145,18 @@ if write_fdrain
     ivar = nvars + 1;
     fdrainid = netcdf.defVar(ncid_out,'fdrain',fdrain_type,fdrain_dimids);
     netcdf.putAtt(ncid_out,ivar-1,'long_name','subsurface drainage decay factor');
+    netcdf.putAtt(ncid_out,ivar-1,'unites','m-1');
+end
+if write_max_drain
+    ivar = ivar + 1;
+    max_drain_id = netcdf.defVar(ncid_out,'max_drain',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','maximum bottom drainage rate');
+    netcdf.putAtt(ncid_out,ivar-1,'unites','mm/s');
+end
+if write_ice_imped
+    ivar = ivar + 1;
+    ice_imped_id = netcdf.defVar(ncid_out,'ice_imped',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','parameter for ice impedance');
     netcdf.putAtt(ncid_out,ivar-1,'unites','m-1');
 end
 
@@ -311,7 +337,14 @@ if write_fdrain
     ivar = nvars + 1;
     netcdf.putVar(ncid_out,ivar-1,fdrain);
 end
-
+if write_max_drain
+    ivar = ivar + 1;
+    netcdf.putVar(ncid_out,ivar-1,max_drain);
+end
+if write_ice_imped
+    ivar = ivar + 1;
+    netcdf.putVar(ncid_out,ivar-1,ice_imped);
+end
 % close files
 netcdf.close(ncid_inp);
 netcdf.close(ncid_out);
