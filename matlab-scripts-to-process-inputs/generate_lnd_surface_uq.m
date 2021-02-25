@@ -1,4 +1,4 @@
-function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot,fdrain)
+function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot,fdrain,max_drain,ice_imped)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
@@ -87,6 +87,14 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot,fdrain)
         if strcmp(varname,'fdrain')
             disp('fdrain is found!!!\n\n');
             data = fdrain;
+        end
+        if strcmp(varname,'max_drain')
+            disp('max_drain is found!!!\n\n');
+            data = max_drain;
+        end
+        if strcmp(varname,'ice_imped')
+            disp('ice_imped is found!!!\n\n');
+            data = ice_imped;
         end
         netcdf.putVar(ncid_out,ivar-1,data);
     end
