@@ -13,10 +13,11 @@
 % 02/24/2021: add three parameters for sensitivitiy analysis of runoff
 %             timing. (Donghui Xu)
 % ======================================================================= %
-function fname_out = CreateCLMUgridSurfdatForE3SM(...
-                    in,...
-                    clm_gridded_surfdata_filename, ...
-                    out_netcdf_dir, clm_usrdat_name,fdrain,max_drain,ice_imped)
+function fname_out = CreateCLMUgridSurfdatForE3SM(  ...
+                    in,                             ...
+                    clm_gridded_surfdata_filename,  ...
+                    out_netcdf_dir, clm_usrdat_name,...
+                    fdrain,max_drain,ice_imped,snoalb_factor)
 
 if nargin == 4
     fdrain = [];
@@ -30,6 +31,10 @@ if nargin == 6
     ice_imped = [];
     write_ice_imped = 0;
 end
+if nargin == 7
+    snoalb_factor = [];
+    write_snoalb_factor = 0;
+end
 if ~isempty(fdrain)
     write_fdrain = 1;
 end
@@ -38,6 +43,9 @@ if ~isempty(max_drain)
 end
 if ~isempty(ice_imped)
     write_ice_imped = 1;
+end
+if ~isempty(snoalb_factor)
+    write_snoalb_factor = 1;
 end
 
 % Default dimension is lon * lat
@@ -161,6 +169,13 @@ if write_ice_imped
     netcdf.putAtt(ncid_out,ivar-1,'long_name','parameter for ice impedance');
     netcdf.putAtt(ncid_out,ivar-1,'unites','m-1');
 end
+if write_snoalb_factor
+    ivar = ivar + 1;
+    ice_imped_id = netcdf.defVar(ncid_out,'snoalb_factor',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','parameter for snow albedo');
+    netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
+end
+
 
 varid = netcdf.getConstant('GLOBAL');
 
@@ -346,6 +361,10 @@ end
 if write_ice_imped
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,ice_imped);
+end
+if write_snoalb_factor
+    ivar = ivar + 1;
+    netcdf.putVar(ncid_out,ivar-1,snoalb_factor);
 end
 % close files
 netcdf.close(ncid_inp);
