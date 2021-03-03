@@ -17,7 +17,7 @@ function fname_out = CreateCLMUgridSurfdatForE3SM(  ...
                     in,                             ...
                     clm_gridded_surfdata_filename,  ...
                     out_netcdf_dir, clm_usrdat_name,...
-                    fdrain,max_drain,ice_imped,snoalb_factor)
+                    fdrain,max_drain,ice_imped,snoalb_factor,fover)
 
 if nargin == 4
     fdrain = [];
@@ -35,6 +35,10 @@ if nargin == 7
     snoalb_factor = [];
     write_snoalb_factor = 0;
 end
+if nargin == 8
+    fover = [];
+    write_fover = 0;
+end
 if ~isempty(fdrain)
     write_fdrain = 1;
 end
@@ -46,6 +50,9 @@ if ~isempty(ice_imped)
 end
 if ~isempty(snoalb_factor)
     write_snoalb_factor = 1;
+end
+if ~isempty(fover)
+    write_fover = 1;
 end
 
 % Default dimension is lon * lat
@@ -175,7 +182,12 @@ if write_snoalb_factor
     netcdf.putAtt(ncid_out,ivar-1,'long_name','parameter for snow albedo');
     netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
 end
-
+if write_fover
+    ivar = ivar + 1;
+    fover_id = netcdf.defVar(ncid_out,'fover',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','decay factor for surface runoff');
+    netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
+end
 
 varid = netcdf.getConstant('GLOBAL');
 
@@ -365,6 +377,10 @@ end
 if write_snoalb_factor
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,snoalb_factor);
+end
+if write_fover
+    ivar = ivar + 1;
+    netcdf.putVar(ncid_out,ivar-1,fover);
 end
 % close files
 netcdf.close(ncid_inp);
