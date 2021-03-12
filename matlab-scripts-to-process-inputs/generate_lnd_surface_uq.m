@@ -1,6 +1,6 @@
 function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
                                  fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
-                                 max,bsw,sucsat,xksat,wasat,fc,mu)
+                                 fmax,bsw,sucsat,xksat,wasat,fc,mu)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');

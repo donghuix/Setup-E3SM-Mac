@@ -130,6 +130,9 @@ for ivar = 1:nvars
         fdrain_dimids = dimids;
         fdrain_type = xtype;
     end
+    if strcmp(varname,'PCE_SAND')
+        sand_dimids = dimids;
+    end
     varnames{ivar} = varname;
     %disp([num2str(ivar) ') varname : ' varname ' ' num2str(dimids)])
     
@@ -179,25 +182,25 @@ if write_fmax
 end
 if write_bsw
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'bsw',fdrain_type,fdrain_dimids);
+    fover_id = netcdf.defVar(ncid_out,'bsw',fdrain_type,sand_dimids);
     netcdf.putAtt(ncid_out,ivar-1,'long_name','bsw');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 if write_sucsat
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'sucsat',fdrain_type,fdrain_dimids);
+    fover_id = netcdf.defVar(ncid_out,'sucsat',fdrain_type,sand_dimids);
     netcdf.putAtt(ncid_out,ivar-1,'long_name','ucsat');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 if write_xksat
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'xksat',fdrain_type,fdrain_dimids);
+    fover_id = netcdf.defVar(ncid_out,'xksat',fdrain_type,sand_dimids);
     netcdf.putAtt(ncid_out,ivar-1,'long_name','xksat');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 if write_wasat
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'wasat',fdrain_type,fdrain_dimids);
+    fover_id = netcdf.defVar(ncid_out,'wasat',fdrain_type,sand_dimids);
     netcdf.putAtt(ncid_out,ivar-1,'long_name','wasat');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
