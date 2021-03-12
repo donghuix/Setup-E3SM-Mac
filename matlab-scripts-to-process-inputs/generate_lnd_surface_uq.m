@@ -1,5 +1,6 @@
 function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
-                                 fdrain,max_drain,ice_imped,snoalb_factor,fover)
+                                 fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
+                                 max,bsw,sucsat,xksat,wasat,fc,mu)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
@@ -104,6 +105,34 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
         if strcmp(varname,'fover')
             disp('fover is found!!!\n\n');
             data = fover;
+        end
+        if strcmp(varname,'fmax')
+            disp('fmax is found!!!\n\n');
+            data = fmax;
+        end
+        if strcmp(varname,'bsw')
+            disp('bsw is found!!!\n\n');
+            data = bsw;
+        end
+        if strcmp(varname,'sucsat')
+            disp('sucsat is found!!!\n\n');
+            data = sucsat;
+        end
+        if strcmp(varname,'xksat')
+            disp('xksat is found!!!\n\n');
+            data = xksat;
+        end
+        if strcmp(varname,'wasat')
+            disp('wasat is found!!!\n\n');
+            data = wasat;
+        end
+        if strcmp(varname,'fc')
+            disp('fc is found!!!\n\n');
+            data = fc;
+        end
+        if strcmp(varname,'mu')
+            disp('mu is found!!!\n\n');
+            data = mu;
         end
         netcdf.putVar(ncid_out,ivar-1,data);
     end
