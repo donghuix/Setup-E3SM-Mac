@@ -130,7 +130,7 @@ for ivar = 1:nvars
         fdrain_dimids = dimids;
         fdrain_type = xtype;
     end
-    if strcmp(varname,'PCE_SAND')
+    if strcmp(varname,'PCT_SAND')
         sand_dimids = dimids;
     end
     varnames{ivar} = varname;
