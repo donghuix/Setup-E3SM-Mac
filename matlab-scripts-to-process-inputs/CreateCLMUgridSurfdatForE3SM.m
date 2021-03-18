@@ -19,11 +19,11 @@ function fname_out = CreateCLMUgridSurfdatForE3SM(  ...
                     clm_gridded_surfdata_filename,  ...
                     out_netcdf_dir, clm_usrdat_name,...
                     fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
-                    fmax,bsw,sucsat,xksat,wasat,fc,mu)
+                    fmax,bsw,sucsat,xksat,watsat,fc,mu)
 
 write_fdrain = 0; write_max_drain = 0; write_ice_imped = 0; write_snoalb_factor = 0;
 write_fover = 0; write_fmax = 0; write_bsw = 0; write_sucsat = 0; write_xksat = 0;
-write_wasat = 0; write_fc = 0; write_mu = 0;
+write_watsat = 0; write_fc = 0; write_mu = 0;
 
 if nargin >= 5; write_fdrain = 1; end;
 if nargin >= 6; write_max_drain = 1; end;
@@ -34,7 +34,7 @@ if nargin >= 10; write_fmax = 1; end;
 if nargin >= 11; write_bsw = 1; end;
 if nargin >= 12; write_sucsat = 1; end;
 if nargin >= 13; write_xksat = 1; end;
-if nargin >= 14; write_wasat = 1; end;
+if nargin >= 14; write_watsat = 1; end;
 if nargin >= 15; write_fc = 1; end;
 if nargin >= 15; write_mu = 1; end;
 
@@ -198,10 +198,10 @@ if write_xksat
     netcdf.putAtt(ncid_out,ivar-1,'long_name','xksat');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
-if write_wasat
+if write_watsat
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'wasat',fdrain_type,sand_dimids);
-    netcdf.putAtt(ncid_out,ivar-1,'long_name','wasat');
+    fover_id = netcdf.defVar(ncid_out,'watsat',fdrain_type,sand_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','watsat');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 if write_fc
@@ -426,9 +426,9 @@ if write_xksat
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,xksat);
 end
-if write_wasat
+if write_watsat
     ivar = ivar + 1;
-    netcdf.putVar(ncid_out,ivar-1,wasat);
+    netcdf.putVar(ncid_out,ivar-1,watsat);
 end
 if write_fc
     ivar = ivar + 1;

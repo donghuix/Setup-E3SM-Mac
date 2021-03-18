@@ -1,6 +1,6 @@
 function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
                                  fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
-                                 fmax,bsw,sucsat,xksat,wasat,fc,mu)
+                                 fmax,bsw,sucsat,xksat,watsat,fc,mu)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
@@ -122,9 +122,9 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             disp('xksat is found!!!\n\n');
             data = xksat;
         end
-        if strcmp(varname,'wasat')
-            disp('wasat is found!!!\n\n');
-            data = wasat;
+        if strcmp(varname,'watsat')
+            disp('watsat is found!!!\n\n');
+            data = watsat;
         end
         if strcmp(varname,'fc')
             disp('fc is found!!!\n\n');
