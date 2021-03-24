@@ -18,8 +18,8 @@ function fname_out = CreateMOSARTUgridInputForE3SM3(    ...
 
 latixy = ncread(mosart_gridded_surfdata_filename,'latixy');
 longxy = ncread(mosart_gridded_surfdata_filename,'longxy');
-latixy_region = user_defined_vars.lat;
-longxy_region = user_defined_vars.lon;
+latixy_region = user_defined_vars.latixy;
+longxy_region = user_defined_vars.longxy;
 
 fname_out = sprintf('%s/MOSART_%s_%s.nc',out_netcdf_dir,mosart_usrdat_name,datestr(now, 'cyymmdd'));
 disp(['  MOSART_dataset: ' fname_out])
