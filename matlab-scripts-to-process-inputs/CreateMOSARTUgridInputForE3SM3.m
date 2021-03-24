@@ -3,20 +3,23 @@
 %
 % # INPUTS #
 % mosart_gridded_surfdata_filename: Global gridded MOSART input data file
-% out_netcdf_dir: Directory where MOSART input dataset will be saved
-% mosart_usrdat_name: User defined name for MOSART dataset
+% out_netcdf_dir:                   Directory for the output
+% mosart_usrdat_name:               User defined name for MOSART dataset
+% user_defined_vars:                User defined variables for the dataset
 % # ------ #
 % 
 % Donghui Xu (donghui.xu@pnnl.gov)
 % 08/06/2020
 % ======================================================================= %
-function fname_out = CreateMOSARTUgridInputForE3SM3(...
-                    latixy_region,longxy_region,ID,dnID, areatotal, fdir, area, ...
-                    mosart_gridded_surfdata_filename, ...
-                    out_netcdf_dir, mosart_usrdat_name)
+function fname_out = CreateMOSARTUgridInputForE3SM3(    ...
+                    mosart_gridded_surfdata_filename,   ...
+                    out_netcdf_dir, mosart_usrdat_name, ...
+                    user_defined_vars)
 
 latixy = ncread(mosart_gridded_surfdata_filename,'latixy');
 longxy = ncread(mosart_gridded_surfdata_filename,'longxy');
+latixy_region = user_defined_vars.lat;
+longxy_region = user_defined_vars.lon;
 
 fname_out = sprintf('%s/MOSART_%s_%s.nc',out_netcdf_dir,mosart_usrdat_name,datestr(now, 'cyymmdd'));
 disp(['  MOSART_dataset: ' fname_out])
@@ -80,25 +83,17 @@ netcdf.endDef(ncid_out);
 for ivar = 1:nvars
     [varname,vartype,vardimids,varnatts]=netcdf.inqVar(ncid_inp,ivar-1);
     data = netcdf.getVar(ncid_inp,ivar-1);
-    switch varname
-        case {'latixy','lat'}
-            netcdf.putVar(ncid_out,ivar-1,latixy_region);
-        case {'longxy','lon'}
-            netcdf.putVar(ncid_out,ivar-1,longxy_region);
-        case {'ID'}
-            netcdf.putVar(ncid_out,ivar-1,ID);
-        case {'dnID'}
-            netcdf.putVar(ncid_out,ivar-1,dnID);
-        case {'areaTotal2'}
-            netcdf.putVar(ncid_out,ivar-1,areatotal);
-        case {'fdir'}
-            netcdf.putVar(ncid_out,ivar-1,fdir);
-        case {'area'}
-            netcdf.putVar(ncid_out,ivar-1,area);
-        otherwise
-            datav = griddata(longxy,latixy,data,longxy_region,latixy_region,'nearest');
-            %[varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
-            netcdf.putVar(ncid_out,ivar-1,datav);
+    if isfield(user_defined_vars,varname)
+        netcdf.putVar(ncid_out,ivar-1,user_defined_vars.(varname));
+        fprintf([varname ' is copied!\n']);
+    elseif strcmp(varname,'lat')
+        netcdf.putVar(ncid_out,ivar-1,latixy_region);
+    elseif strcmp(varname,'lon')
+        netcdf.putVar(ncid_out,ivar-1,longxy_region);
+    else
+        datav = griddata(longxy,latixy,data,longxy_region,latixy_region,'nearest');
+        %[varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
+        netcdf.putVar(ncid_out,ivar-1,datav);
     end
 end
 
