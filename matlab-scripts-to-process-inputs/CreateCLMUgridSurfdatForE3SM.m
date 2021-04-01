@@ -243,8 +243,8 @@ end
 pftmask = ncread(clm_gridded_surfdata_filename,'PFTDATA_MASK');
 
 % mark invalid gridcells as [lon, lat] [-9999, -9999]
-latixy(pftmask==0)=-9999;
-longxy(pftmask==0)=-9999;
+% latixy(pftmask==0)=-9999;
+% longxy(pftmask==0)=-9999;
 
 % allocate memoery
 ii_idx = zeros(size(long_region));

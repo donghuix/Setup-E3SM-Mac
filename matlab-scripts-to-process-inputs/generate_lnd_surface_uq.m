@@ -3,7 +3,7 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
                                  fmax,bsw,sucsat,xksat,watsat,fc,mu)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
-    ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
+    ncid_out = netcdf.create(fname_out,'64BIT_OFFSET');
     [ndims,nvars,ngatts,unlimdimid] = netcdf.inq(ncid_inp);
     dimid = netcdf.inqDimID(ncid_inp,'gridcell');
     [~, ncells] = netcdf.inqDim(ncid_inp,dimid);
