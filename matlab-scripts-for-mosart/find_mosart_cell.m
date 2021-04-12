@@ -31,6 +31,7 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
     
     if ~isempty(target_area)
         if target_area < nanmean(area)
+            disp('watershed is smaller than the grid cell!!!');
             target_area = [];
         end
     end
