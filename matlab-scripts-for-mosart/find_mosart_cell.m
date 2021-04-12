@@ -85,11 +85,27 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
         end
         if ~isempty(target_area)
             drainage_area = nansum(area([ioutlet; icontributing]));
+            %disp(drainage_area/2.59e+6);
             if drainage_area/target_area > 0.5 && drainage_area/target_area < 1.5
                 fprintf(['MOSART drainage area is ' num2str(drainage_area/1e6) 'km^{2}\n']);
                 fprintf(['GSIM drainage area is ' num2str(target_area/1e6) 'km^{2}\n']);
                 break;
-            end  
+            end
+        end
+    end
+    if drainage_area/target_area < 0.5 || drainage_area/target_area > 1.5
+        ioutlet = I(1);
+        outletg = ID(ioutlet);
+        icontributing = [];
+        found = outletg;
+        while ~isempty(found)
+            found2 = [];
+            for i = 1 : length(found)
+                upstrm = find(dnID == found(i));
+                found2 = [found2; upstrm];
+            end
+            icontributing = [icontributing; found2];
+            found = found2;
         end
     end
     if debug
