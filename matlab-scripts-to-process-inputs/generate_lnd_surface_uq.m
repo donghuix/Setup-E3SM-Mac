@@ -126,8 +126,8 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             disp('watsat is found!!!\n\n');
             data = watsat;
         end
-        if strcmp(varname,'fc')
-            disp('fc is found!!!\n\n');
+        if strcmp(varname,'pc')
+            disp('pc is found!!!\n\n');
             data = fc;
         end
         if strcmp(varname,'mu')
