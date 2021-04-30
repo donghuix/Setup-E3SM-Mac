@@ -174,12 +174,12 @@ if write_fover
     netcdf.putAtt(ncid_out,ivar-1,'long_name','decay factor for surface runoff');
     netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
 end
-if write_fmax
-    ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'fmax',fdrain_type,fdrain_dimids);
-    netcdf.putAtt(ncid_out,ivar-1,'long_name','maximum saturation fraction');
-    netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
-end
+% if write_fmax
+%     ivar = ivar + 1;
+%     fover_id = netcdf.defVar(ncid_out,'fmax',fdrain_type,fdrain_dimids);
+%     netcdf.putAtt(ncid_out,ivar-1,'long_name','maximum saturation fraction');
+%     netcdf.putAtt(ncid_out,ivar-1,'unites','[0-1]');
+% end
 if write_bsw
     ivar = ivar + 1;
     fover_id = netcdf.defVar(ncid_out,'bsw',fdrain_type,sand_dimids);
@@ -410,10 +410,10 @@ if write_fover
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,fover);
 end
-if write_fmax
-    ivar = ivar + 1;
-    netcdf.putVar(ncid_out,ivar-1,fmax);
-end
+% if write_fmax
+%     ivar = ivar + 1;
+%     netcdf.putVar(ncid_out,ivar-1,fmax);
+% end
 if write_bsw
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,bsw);
