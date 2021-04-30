@@ -206,8 +206,8 @@ if write_watsat
 end
 if write_fc
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'fc',fdrain_type,fdrain_dimids);
-    netcdf.putAtt(ncid_out,ivar-1,'long_name','fc');
+    fover_id = netcdf.defVar(ncid_out,'pc',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','pc');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 if write_mu
