@@ -106,7 +106,7 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             disp('fover is found!!!\n\n');
             data = fover;
         end
-        if strcmp(varname,'fmax')
+        if strcmp(varname,'FMAX')
             disp('fmax is found!!!\n\n');
             data = fmax;
         end
