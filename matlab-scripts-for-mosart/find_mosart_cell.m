@@ -2,9 +2,10 @@
 % Description: search the contribuing grid cells in the MOSART domain given
 %              the coordinate of a station 
 %
-% Input:  fname -> file name of MOSART domain file
-%         lon ---> longitude of the station
-%         lat ---> latitude of the station
+% Input:  fname -------> file name of MOSART domain file
+%         lon ---------> longitude of the station
+%         lat ---------> latitude of the station
+%         target_area -> accurate area of the basin [m^2]
 % Output: ioutlet -------> corresponding outlet index in the domain file
 %         icontributing -> the indices of the cells that contributing to
 %                          the given coordinate
