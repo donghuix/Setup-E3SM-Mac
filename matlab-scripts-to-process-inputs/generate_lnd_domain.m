@@ -1,7 +1,7 @@
 function area = generate_lnd_domain(xc,yc,xv,yv,frac,mask,fname_out)
 
 [ni,nj] = size(xc);
-if ni == 1 & nj > 1
+if ni == 1 && nj > 1
     error('Unstructured data, need to use column vector!')
 end
 nv  = size(xv,1);
