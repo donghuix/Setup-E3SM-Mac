@@ -1,6 +1,6 @@
 function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
                                  fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
-                                 fmax,bsw,sucsat,xksat,watsat,fc,mu,slopebeta,slopemax)
+                                 fmax,bsw,sucsat,xksat,watsat,fc,mu,micro_sigma,kh2osfc)
     
     ncid_inp = netcdf.open(surface_gridded_filename,'NC_NOWRITE');
     ncid_out = netcdf.create(fname_out,'64BIT_OFFSET');
@@ -134,13 +134,13 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             disp('mu is found!!!\n\n');
             data = mu;
         end
-        if strcmp(varname,'slopebeta')
-            disp('slopebeta is found!!!\n\n');
-            data = slopebeta;
+        if strcmp(varname,'micro_sigma')
+            disp('micro_sigma is found!!!\n\n');
+            data = micro_sigma;
         end
-        if strcmp(varname,'slopemax')
-            disp('slopemax is found!!!\n\n');
-            data = slopemax;
+        if strcmp(varname,'kh2osfc')
+            disp('kh2osfc is found!!!\n\n');
+            data = kh2osfc;
         end
         netcdf.putVar(ncid_out,ivar-1,data);
     end

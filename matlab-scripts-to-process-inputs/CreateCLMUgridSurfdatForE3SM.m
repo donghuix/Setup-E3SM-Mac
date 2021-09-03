@@ -19,11 +19,11 @@ function fname_out = CreateCLMUgridSurfdatForE3SM(  ...
                     clm_gridded_surfdata_filename,  ...
                     out_netcdf_dir, clm_usrdat_name,...
                     fdrain,max_drain,ice_imped,snoalb_factor,fover, ...
-                    fmax,bsw,sucsat,xksat,watsat,fc,mu,slopebeta,slopemax)
+                    fmax,bsw,sucsat,xksat,watsat,fc,mu,micro_sigma,kh2osfc)
 
 write_fdrain = 0; write_max_drain = 0; write_ice_imped = 0; write_snoalb_factor = 0;
 write_fover = 0; write_fmax = 0; write_bsw = 0; write_sucsat = 0; write_xksat = 0;
-write_watsat = 0; write_fc = 0; write_mu = 0; write_slopebeta = 0; write_slopemax = 0;
+write_watsat = 0; write_fc = 0; write_mu = 0; write_micro_sigma = 0; write_kh2osfc = 0;
 
 if nargin >= 5; write_fdrain = 1;        end;
 if nargin >= 6; write_max_drain = 1;     end;
@@ -37,8 +37,8 @@ if nargin >= 13; write_xksat = 1;        end;
 if nargin >= 14; write_watsat = 1;       end;
 if nargin >= 15; write_fc = 1;           end;
 if nargin >= 16; write_mu = 1;           end;
-if nargin >= 17; write_slopebeta = 1;    end;
-if nargin >= 18; write_slopemax = 1;     end;
+if nargin >= 17; write_micro_sigma = 1;    end;
+if nargin >= 18; write_kh2osfc = 1;     end;
 
 % Default dimension is lon * lat
 latixy = ncread(clm_gridded_surfdata_filename,'LATIXY');
@@ -218,16 +218,16 @@ if write_mu
     netcdf.putAtt(ncid_out,ivar-1,'long_name','mu');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
-if write_slopebeta
+if write_micro_sigma
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'slopebeta',fdrain_type,fdrain_dimids);
-    netcdf.putAtt(ncid_out,ivar-1,'long_name','slopebeta');
+    fover_id = netcdf.defVar(ncid_out,'micro_sigma',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','micro_sigma');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
-if write_slopemax
+if write_kh2osfc
     ivar = ivar + 1;
-    fover_id = netcdf.defVar(ncid_out,'slopemax',fdrain_type,fdrain_dimids);
-    netcdf.putAtt(ncid_out,ivar-1,'long_name','slopemax');
+    fover_id = netcdf.defVar(ncid_out,'kh2osfc',fdrain_type,fdrain_dimids);
+    netcdf.putAtt(ncid_out,ivar-1,'long_name','kh2osfc');
     netcdf.putAtt(ncid_out,ivar-1,'unites','-');
 end
 
@@ -456,13 +456,13 @@ if write_mu
     ivar = ivar + 1;
     netcdf.putVar(ncid_out,ivar-1,mu);
 end
-if write_slopebeta
+if write_micro_sigma
     ivar = ivar + 1;
-    netcdf.putVar(ncid_out,ivar-1,slopebeta);
+    netcdf.putVar(ncid_out,ivar-1,micro_sigma);
 end
-if write_slopemax
+if write_kh2osfc
     ivar = ivar + 1;
-    netcdf.putVar(ncid_out,ivar-1,slopemax);
+    netcdf.putVar(ncid_out,ivar-1,kh2osfc);
 end
 % close files
 netcdf.close(ncid_inp);
