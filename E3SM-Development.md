@@ -10,4 +10,5 @@
 7. ```git commit -m 'some messages'```
 
 Note 1: check if local repo piont to E3SM by using ```git remote -v```
+
 Note 2: notes to do the regression test for the new code -> https://gist.github.com/bishtgautam/31a73b933e2492698bccfc7b55acf01e
