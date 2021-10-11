@@ -1,4 +1,4 @@
-function area = generate_lnd_domain(xc,yc,xv,yv,frac,mask,fname_out)
+function area = generate_lnd_domain(xc,yc,xv,yv,frac,mask,area,fname_out)
 
 [ni,nj] = size(xc);
 if ni == 1 && nj > 1
@@ -85,19 +85,21 @@ netcdf.endDef(ncid_out);
 
 % compute are based on vertex
 ndimv = length(size(xv));
-area = zeros(ni,nj);
-for i = 1 : ni
-    for j = 1 : nj
-        if ndimv == 2 && nj == 1
-            xv1 = xv(:,i);
-            yv1 = yv(:,i);
-        elseif ndimv == 3
-            xv1 = xv(:,i,j);
-            yv1 = yv(:,i,j);
-            xv1 = xv1(:);
-            yv1 = yv1(:);
+if ismepty(area)
+    area = zeros(ni,nj);
+    for i = 1 : ni
+        for j = 1 : nj
+            if ndimv == 2 && nj == 1
+                xv1 = xv(:,i);
+                yv1 = yv(:,i);
+            elseif ndimv == 3
+                xv1 = xv(:,i,j);
+                yv1 = yv(:,i,j);
+                xv1 = xv1(:);
+                yv1 = yv1(:);
+            end
+            area(i,j) = areaint(yv1,xv1)*4*pi; 
         end
-        area(i,j) = areaint(yv1,xv1)*4*pi; 
     end
 end
 
