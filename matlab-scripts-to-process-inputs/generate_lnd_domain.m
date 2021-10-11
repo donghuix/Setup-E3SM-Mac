@@ -85,7 +85,7 @@ netcdf.endDef(ncid_out);
 
 % compute are based on vertex
 ndimv = length(size(xv));
-if ismepty(area)
+if isempty(area)
     area = zeros(ni,nj);
     for i = 1 : ni
         for j = 1 : nj
