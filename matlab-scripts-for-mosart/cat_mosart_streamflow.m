@@ -28,6 +28,7 @@ function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
     % Read streamflow from the outputs
     SFTS = NaN(length(lons),length(files));
     if run_parallel
+        % TODO: add parallel process 
         for i = 1 : length(files)
             filename = fullfile(files(i).folder,files(i).name);
             RDL = ncread(filename,'RIVER_DISCHARGE_OVER_LAND_LIQ');
