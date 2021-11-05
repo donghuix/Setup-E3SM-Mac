@@ -54,13 +54,14 @@ for i = 1 : length(basin_streamflow)
     end
     [R2(i),~,NSE(i)] = estimate_evaluation_metric(basin_streamflow(i).mu(j1:j2), ...
                                                   SFTS(i,i1:i2)');
-    figure;
-    plot(basin_streamflow(i).mu(j1:j2),'k-','LineWidth',2); hold on;
-    plot(SFTS(i,i1:i2)','b--','LineWidth',2);
 end
 
 if show_plot
+    figure;
     scatter(lons,lats,72,NSE,'filled'); colorbar;
+    figure;
+    plot(basin_streamflow(i).mu(j1:j2),'k-','LineWidth',2); hold on;
+    plot(SFTS(i,i1:i2)','b--','LineWidth',2);
 end
 
 end
