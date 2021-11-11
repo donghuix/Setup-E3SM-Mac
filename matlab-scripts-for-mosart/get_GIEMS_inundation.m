@@ -30,7 +30,7 @@ function [frac_in, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
         lon_in = lon(in);
         lat_in = lat(in);
     else
-        load('/Users/xudo627/DATA/GIEMS_1993_2007.mat');
+        load('/Users/xudo627/DATA/GIEMS/GIEMS_1993_2007.mat');
             % load half degree cooridinates 
         latixy = ncread('/Users/xudo627/projects/cesm-inputdata/MOSART_global_half_20180721a.nc','latixy');
         longxy = ncread('/Users/xudo627/projects/cesm-inputdata/MOSART_global_half_20180721a.nc','longxy');
