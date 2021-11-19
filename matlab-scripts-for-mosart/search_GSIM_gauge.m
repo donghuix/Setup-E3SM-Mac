@@ -11,7 +11,7 @@ function [gsim,gsim2] = search_GSIM_gauge(X,Y,xo,yo,show_plot)
     % find the cloest gauge 
     dist = (lon(in) - xo).^2 + (lat(in) - yo).^2;
     [~,ind2] = sort(dist,'ascend');
-    disp(ind2);
+%     disp(ind2);
     ind = find((lon(in) - xo).^2 + (lat(in) - yo).^2 == min((lon(in) - xo).^2 + (lat(in) - yo).^2));
 
     if show_plot
