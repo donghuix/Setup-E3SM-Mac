@@ -70,8 +70,10 @@ for i = 1 : length(basin_streamflow)
         plot(tmon(i1:i2),SFTS(i,i1:i2)','r--','LineWidth',3);
         title(basin_streamflow(i).label,'FontSize',16,'FontWeight','bold');
         xlim([tmon(i1) tmon(i2)]);
-        datetick('x','mmmyy','keeplimits');
-        set(gca,'FontSize',14);
+        xticks([tmon(i1:60:end); tmon(end)]);
+        datetick('x','mmmyy','keepticks');
+        
+        set(gca,'FontSize',15);
         if i == 1
             leg = legend('OBS','ELM-MOSART');
             leg.FontSize = 16;
