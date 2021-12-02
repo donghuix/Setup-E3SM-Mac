@@ -63,6 +63,12 @@ function [e_eprof3,a_eprof3] = preprocess_elevProf (fname,debug)
 
         for j = ipt_bl_bktp(iu)+1 : 11
             k = j - ipt_bl_bktp(iu) + 2;
+            if k > 12
+                fprintf('k should be smaller than 12\n');
+                disp([num2str(iu) '/' num2str(numr)]);
+                disp(ipt_bl_bktp(iu));
+                disp(rwid(iu));
+            end
             a_eprof3(iu, k) = a_eprof(iu, j); 
             e_eprof3(iu, k) = e_eprof(iu, j) - e_chnl(iu);
         end
