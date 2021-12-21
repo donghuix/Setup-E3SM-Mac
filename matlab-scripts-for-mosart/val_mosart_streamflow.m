@@ -66,8 +66,12 @@ for i = 1 : length(basin_streamflow)
 %         scatter(lons,lats,72,NSE,'filled'); colorbar;
         figure(101);
         subplot_tight(length(basin_streamflow),1,i,[0.08 0.08]);
-        plot(tmon(i1:i2),basin_streamflow(i).mu(j1:j2),'k-','LineWidth',3); hold on; grid on;
-        plot(tmon(i1:i2),SFTS(i,i1:i2)','r--','LineWidth',3);
+        plot(tmon(i1:i2),basin_streamflow(i).mu(j1:j2),'k-','LineWidth',2); hold on; grid on;
+        if isfield(basin_streamflow,'color')
+            plot(tmon(i1:i2),SFTS(i,i1:i2)',':','Color',basin_streamflow(i).color,'LineWidth',3);
+        else
+            plot(tmon(i1:i2),SFTS(i,i1:i2)','r--','LineWidth',3);
+        end
         title(basin_streamflow(i).label,'FontSize',16,'FontWeight','bold');
         xlim([tmon(i1) tmon(i2)]);
         xticks([tmon(i1:60:end); tmon(end)]);
@@ -84,8 +88,10 @@ for i = 1 : length(basin_streamflow)
         dim = cellfun(@(x) x.*[1 1 1 1], p, 'uni',0);
         str = {['R^{2} = ' num2str(round(R2(i),2)) ', NSE = ' num2str(round(NSE(i),2))]};
         t = annotation('textbox',dim{1},'String',str,'FitBoxToText','on');
-        t.FontSize = 16;
+        t.FontSize = 15;
         t.FontWeight = 'bold';
+        t.Color = basin_streamflow(i).color;
+        t.EdgeColor = 'none';
     end
 end
 

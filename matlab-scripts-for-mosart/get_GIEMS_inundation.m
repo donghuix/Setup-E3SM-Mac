@@ -1,4 +1,4 @@
-function [frac_in, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
+function [frac_in, frac, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/mylib/m/');
     addpath('/Users/xudo627/projects/topotoolbox/colormaps/');
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/CODE/Setup-E3SM-Mac/matlab-scripts-for-mosart/');
@@ -25,6 +25,7 @@ function [frac_in, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
         lon(lon > 180) = lon(lon > 180) - 360;
         
         in = inpolygon(lon,lat,S.X,S.Y);
+        frac    = data(in,4:end);
         frac_in = data(in,4:end);
         frac_in(frac_in == -99) = NaN;
         lon_in = lon(in);
