@@ -1,4 +1,4 @@
-function [e_eprof3,a_eprof3] = preprocess_elevProf (fname,debug)
+function [e_eprof3,a_eprof3,ipt_bl_bktp,e_chnl] = preprocess_elevProf (fname,debug)
     
     if nargin == 1
         debug =0;
