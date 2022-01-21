@@ -49,7 +49,7 @@ lati_region = latixy(in);
 fname_out = sprintf('%s/surfdata_%s_%s.nc',...
             out_netcdf_dir,clm_usrdat_name,datestr(now, 'cyymmdd'));
         
-disp(['  surface_dataset: ' fname_out])
+disp(['  surface_dataset: ' fname_out]);
 
 % Check if the file is available
 if ~exist(clm_gridded_surfdata_filename, 'file')
