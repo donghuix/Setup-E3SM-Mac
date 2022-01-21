@@ -50,6 +50,9 @@ for ivar = 1:nvars
     if strcmp(varname,'PCT_NAT_PFT')
         pct_type = xtype;
     end
+    if strcmp(varname,'natpft')
+        int_type = xtype;
+    end
     for iatt = 1:natts
         attname = netcdf.inqAttName(ncid_inp,ivar-1,iatt-1);
         attvalue = netcdf.getAtt(ncid_inp,ivar-1,attname);
@@ -57,7 +60,7 @@ for ivar = 1:nvars
     end
 end
 % Add CROP PFT attribution
-varid(ivar+1) = netcdf.defVar(ncid_out,'cft',pct_type,cft_dimid);
+varid(ivar+1) = netcdf.defVar(ncid_out,'cft',int_type,cft_dimid);
 netcdf.putAtt(ncid_out,ivar,'long_name','indices of CFTs');
 netcdf.putAtt(ncid_out,ivar,'unites','index');
 
@@ -100,8 +103,12 @@ for ivar = 1:nvars
         case 'MONTHLY_HEIGHT_BOT'
             data = MONTHLY_HEIGHT_BOT;
     end
-        
-    netcdf.putVar(ncid_out,ivar-1,data);
+    
+    if  length(vardimids) == 3
+        netcdf.putVar(ncid_out,ivar-1,zeros(1,length(size(data))),size(data),data);
+    else
+        netcdf.putVar(ncid_out,ivar-1,data);
+    end
 end
 ivar = ivar + 1;
 netcdf.putVar(ncid_out,ivar-1,[0:9]');
