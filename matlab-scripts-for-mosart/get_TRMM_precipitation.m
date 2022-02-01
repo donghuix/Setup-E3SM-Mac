@@ -22,6 +22,13 @@ function [TRMMin, yr, mo, xc, yc, xv, yv] = get_TRMM_precipitation(S)
     xv(1,:) = xc - dx/2; xv(2,:) = xc + dx/2; xv(3,:) = xc + dx/2; xv(4,:) = xc - dx/2;
     yv(1,:) = yc - dy/2; yv(2,:) = yc - dy/2; yv(3,:) = yc + dy/2; yv(4,:) = yc + dy/2;
     
+    k = 1;
+    for i = 1998 : 2019
+        for j = 1 : 12
+            tmon(k,1) = datenum(i,j,1,1,1,1);
+            k = k + 1;
+        end
+    end
     [yr,mo] = datevec(tmon);
     
 end
