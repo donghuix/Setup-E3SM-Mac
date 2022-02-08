@@ -7,7 +7,7 @@ yv = ncread(fname_in,'yv');
 mask = ncread(fname_in,'mask');
 area = ncread(fname_in,'area');
 
-if length(size(xc)) == 2
+if length(size(xc)) == 2 && size(xc,2) ~= 1
     grid_rank = 2;
     [m,n] = size(xc);
 else
@@ -21,16 +21,16 @@ grid_corners = size(xv,1);
 
 grid_center_lat = NaN(grid_size,1);
 grid_center_lon = NaN(grid_size,1);
-grid_corner_lat = NaN(grid_size,grid_corners);
-grid_corner_lon = NaN(grid_size,grid_corners);
+grid_corner_lat = NaN(grid_corners,grid_size);
+grid_corner_lon = NaN(grid_corners,grid_size);
 grid_imask      = NaN(grid_size,1);
 grid_area       = NaN(grid_size,1);
 
 if grid_rank == 1
     grid_center_lat = yc;
     grid_center_lon = xc;
-    grid_corner_lat = yv';
-    grid_corner_lon = xv';
+    grid_corner_lat = yv;
+    grid_corner_lon = xv;
     grid_imask      = mask;
     grid_area       = area;
 elseif grid_rank == 2
@@ -40,9 +40,9 @@ elseif grid_rank == 2
     grid_area       = area(:);
     for i = 1 : grid_corners
         tmp = yv(i,:,:);
-        grid_corner_lat(:,i) = tmp(:);
+        grid_corner_lat(i,:) = tmp(:);
         tmp = xv(i,:,:);
-        grid_corner_lon(:,i) = tmp(:);
+        grid_corner_lon(i,:) = tmp(:);
     end
 end
 
@@ -79,11 +79,11 @@ varid(4) = netcdf.defVar(ncid,'grid_imask','int',dimid(1));
 netcdf.putAtt(ncid,ivar-1,'units','unitless');
 
 ivar = 5;
-varid(5) = netcdf.defVar(ncid,'grid_corner_lat','double',[dimid(1),dimid(2)]); 
+varid(5) = netcdf.defVar(ncid,'grid_corner_lat','double',[dimid(2),dimid(1)]); 
 netcdf.putAtt(ncid,ivar-1,'units','degrees');
 
 ivar = 6;
-varid(6) = netcdf.defVar(ncid,'grid_corner_lon','double',[dimid(1),dimid(2)]); 
+varid(6) = netcdf.defVar(ncid,'grid_corner_lon','double',[dimid(2),dimid(1)]); 
 netcdf.putAtt(ncid,ivar-1,'units','degrees');
 
 ivar = 7;
