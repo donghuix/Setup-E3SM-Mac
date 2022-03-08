@@ -8,13 +8,72 @@ function [precipin, yr, mo, xc, yc, xv, yv] = get_precip(S,name)
     end
 end
 
-function [GPCCin, yr, mo, xc, yc, xv, yv] = get_MSWEP_precipitation(S)
+function [MSWEPin, yr, mo, xc, yc, xv, yv] = get_MSWEP_precipitation(S)
     
-    datadir = '/Volumes/LaCie/DATA/Precipitation/GPCC/';
+    datadir = '/Volumes/LaCie/DATA/Precipitation/MSWEP/';
+    days_of_month = [31;28;31;30;31;30;31;31;30;31;30;31];
     yr_sr = 1980;
     yr_ed = 2019;
     
-
+    for i = yr_sr : yr_ed
+        if ~exist([datadir num2str(i) '.mat'],'file')
+            disp(['Processing for ' num2str(i) '...']);
+            MSWEP = NaN(3600,1800,12);
+            k = 1;
+            for j = 1 : 12
+                if j < 10
+                    filename = [datadir num2str(i) '0' num2str(j) '.nc'];
+                else
+                    filename = [datadir num2str(i) num2str(j) '.nc'];
+                end
+                disp(filename);
+                if k == 1
+                    lon = ncread(filename,'lon');
+                    lat = ncread(filename,'lat');
+                    [lon,lat] = meshgrid(lon,lat);
+                    lon = lon';
+                    lat = lat';
+                end
+                precipitation = ncread(filename,'precipitation');
+                MSWEP(:,:,k) = precipitation./days_of_month(j)./24; % [mm/month] -> [mm/hour]
+                k = k + 1;
+            end
+            save([datadir num2str(i) '.mat'],'MSWEP','lon','lat');
+        end
+    end
+    
+    load([datadir num2str(yr_sr) '.mat'],'lon','lat');
+    
+    in = inpolygon(lon,lat,S.X,S.Y);
+    dx = 0.1;
+    dy = 0.1;
+    l = (yr_ed - yr_sr + 1) * 12;
+    k = 1;
+    for i = yr_sr : yr_ed
+        for j = 1 : 12
+            tmon(k,1) = datenum(i,j,1,1,1,1);
+            k = k + 1;
+        end
+    end
+    [yr,mo] = datevec(tmon);
+    xv = NaN(4,sum(in(:)));
+    yv = NaN(4,sum(in(:)));
+    MSWEPin = NaN(sum(in(:)),l);
+    k = 1;
+    for i = yr_sr : yr_ed
+        load([datadir num2str(i) '.mat'],'MSWEP');
+        for j = 1 : 12
+            tmp = MSWEP(:,:,j);
+            MSWEPin(:,k) = tmp(in); % [mm/month] -> [mm/hour]
+            k = k + 1;
+        end
+    end
+    xc = lon(in);
+    yc = lat(in);
+    
+    xv(1,:) = xc - dx/2; xv(2,:) = xc + dx/2; xv(3,:) = xc + dx/2; xv(4,:) = xc - dx/2;
+    yv(1,:) = yc - dy/2; yv(2,:) = yc - dy/2; yv(3,:) = yc + dy/2; yv(4,:) = yc + dy/2;
+    
 end
 function [GPCCin, yr, mo, xc, yc, xv, yv] = get_GPCC_precipitation(S)
     
