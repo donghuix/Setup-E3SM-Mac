@@ -6,7 +6,7 @@ function copy_nc(fname_in,fname_out,ntot)
     dimid = netcdf.inqDimID(ncid_inp,'gridcell');
     [~, ncells] = netcdf.inqDim(ncid_inp,dimid);
     
-    info_inp = ncinfo(surface_gridded_filename);
+    info_inp = ncinfo(fname_in);
     
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
