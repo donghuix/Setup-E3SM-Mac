@@ -1,6 +1,6 @@
 function [frac_in, frac, lon_in, lat_in, yr, mo] = get_GIEMS_inundation(S,use_ori)
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/mylib/m/');
-    addpath('/Users/xudo627/projects/topotoolbox/colormaps/');
+    addpath('/Users/xudo627/donghui/CODE/topotoolbox/colormaps/');
     addpath('/Users/xudo627/OneDrive - PNNL/donghui/CODE/Setup-E3SM-Mac/matlab-scripts-for-mosart/');
     
     if nargin == 1
