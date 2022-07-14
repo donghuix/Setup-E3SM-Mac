@@ -25,20 +25,20 @@ write_fdrain = 0; write_max_drain = 0; write_ice_imped = 0; write_snoalb_factor 
 write_fover = 0; write_fmax = 0; write_bsw = 0; write_sucsat = 0; write_xksat = 0;
 write_watsat = 0; write_fc = 0; write_mu = 0; write_micro_sigma = 0; write_kh2osfc = 0;
 
-if ~isempty(fdrain); write_fdrain = 1;               end;
-if ~isempty(max_drain); write_max_drain = 1;         end;
-if ~isempty(ice_imped); write_ice_imped = 1;         end;
-if ~isempty(snoalb_factor); write_snoalb_factor = 1; end;
-if ~isempty(fover); write_fover = 1;                 end;
-if ~isempty(fmax); write_fmax = 1;                   end;
-if ~isempty(bsw); write_bsw = 1;                     end;
-if ~isempty(sucsat); write_sucsat = 1;               end;
-if ~isempty(xksat); write_xksat = 1;                 end;
-if ~isempty(watsat); write_watsat = 1;               end;
-if ~isempty(fc); write_fc = 1;                       end;
-if ~isempty(mu); write_mu = 1;                       end;
-if ~isempty(micro_sigma); write_micro_sigma = 1;     end;
-if ~isempty(kh2osfc); write_kh2osfc = 1;             end;
+if ~isempty(fdrain);        write_fdrain = 1;            end;
+if ~isempty(max_drain);     write_max_drain = 1;         end;
+if ~isempty(ice_imped);     write_ice_imped = 1;         end;
+if ~isempty(snoalb_factor); write_snoalb_factor = 1;     end;
+if ~isempty(fover);         write_fover = 1;             end;
+if ~isempty(fmax);          write_fmax = 1;              end;
+if ~isempty(bsw);           write_bsw = 1;               end;
+if ~isempty(sucsat);        write_sucsat = 1;            end;
+if ~isempty(xksat);         write_xksat = 1;             end;
+if ~isempty(watsat);        write_watsat = 1;            end;
+if ~isempty(fc);            write_fc = 1;                end;
+if ~isempty(mu);            write_mu = 1;                end;
+if ~isempty(micro_sigma);   write_micro_sigma = 1;       end;
+if ~isempty(kh2osfc);       write_kh2osfc = 1;           end;
 
 % Default dimension is lon * lat
 latixy = ncread(clm_gridded_surfdata_filename,'LATIXY');
