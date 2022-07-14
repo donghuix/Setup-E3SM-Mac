@@ -305,7 +305,11 @@ for ivar = 1:nvars
             netcdf.putVar(ncid_out,ivar-1,long_region);
         case {'FMAX'}
             disp('Found FMAX!!!');
-            netcdf.putVar(ncid_out,ivar-1,fmax);
+            if write_fmax
+                netcdf.putVar(ncid_out,ivar-1,fmax);
+            else
+                netcdf.putVar(ncid_out,ivar-1,data);
+            end
         otherwise
             
             switch length(vardimids)
