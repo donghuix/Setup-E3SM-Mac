@@ -29,7 +29,7 @@ function show_river_network(fname,thre,col)
                     else
                         [i2,j2] = find(ID == dnID(i,j));
                         if ratio(i,j) > thre
-                        plot([longxy(i,j) longxy(i2,j2)], [latixy(i,i) latixy(i2,j2)], col,'LineWidth',2); hold on;
+                        plot([longxy(i,j) longxy(i2,j2)], [latixy(i,j) latixy(i2,j2)], col,'LineWidth',2); hold on;
                         end
                         i2 = []; j2 = [];
                     end
