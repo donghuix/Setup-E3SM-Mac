@@ -2,11 +2,13 @@
 % Creates an unstructured input netCDF file of MOSART for E3SM.
 %
 % # INPUTS #
-% in: if in is logical matrix, it indicates which cells to extract
-%     if in is a shapefile, it is the boundary to clip the mesh
-% mosart_gridded_surfdata_filename: Global gridded MOSART input data file
-% out_netcdf_dir: Directory where MOSART input dataset will be saved
-% mosart_usrdat_name: User defined name for MOSART dataset
+% in:                     if in is logical matrix, it indicates which cells to extract
+%                         if in is a shapefile, it is the boundary to clip the mesh
+% mosart_gridded_filename:Gridded MOSART input data file to interpolate on (template)
+% out_netcdf_dir:         Directory where MOSART input dataset will be saved
+% mosart_usrdat_name:     User defined name for MOSART dataset
+% include_all_cells:      (optional), if include_all_cells = 1, extract all the gird cells defined by in
+%                                     if include_all_cells = 0, only extract the grid cells corrsponding to the outlet
 % # ------ #
 % 
 % Donghui Xu (donghui.xu@pnnl.gov)
@@ -14,7 +16,7 @@
 % ======================================================================= %
 function fname_out = CreateMOSARTUgridInputForE3SM2(...
                     in, ...
-                    mosart_gridded_surfdata_filename, ...
+                    mosart_gridded_filename, ...
                     out_netcdf_dir, mosart_usrdat_name,include_all_cells)
 
 if nargin == 4
@@ -22,12 +24,14 @@ if nargin == 4
                            % 1: use all the cells in the areas
 end
 
-latixy = ncread(mosart_gridded_surfdata_filename,'latixy');
-longxy = ncread(mosart_gridded_surfdata_filename,'longxy');
-areaTotal = ncread(mosart_gridded_surfdata_filename,'areaTotal2');
+latixy = ncread(mosart_gridded_filename,'latixy');
+longxy = ncread(mosart_gridded_filename,'longxy');
+areaTotal = ncread(mosart_gridded_filename,'areaTotal2');
 areaTotal_region = areaTotal(in);
 ioutlet = find(areaTotal_region == max(areaTotal_region));
 
+% if in is provided as a shapefile, using the watershed boundary to find
+% the index inside
 if ischar(in)
     if ~isexist(in)
         error([in ' does not exist!'])
@@ -38,27 +42,28 @@ if ischar(in)
 end
 
 if islogical(in)
-    ncells = sum(in(:));
+    ncells = sum(in(:)); % number of grid cells in the domain
 else
     ncells = length(in);
 end
-ID     = ncread(mosart_gridded_surfdata_filename,'ID');
-dnID   = ncread(mosart_gridded_surfdata_filename,'dnID');
+ID     = ncread(mosart_gridded_filename,'ID');
+dnID   = ncread(mosart_gridded_filename,'dnID');
 ID_region = 1 : ncells;
 ID_region = ID_region';
 
+% MOSART parameter name
 fname_out = sprintf('%s/MOSART_%s_%s.nc',out_netcdf_dir,mosart_usrdat_name,datestr(now, 'cyymmdd'));
 disp(['  MOSART_dataset: ' fname_out])
 
 % Check if the file is available
-if ~exist(mosart_gridded_surfdata_filename, 'file')
-    error(['File not found: ' mosart_gridded_surfdata_filename]);
+if ~exist(mosart_gridded_filename, 'file')
+    error(['File not found: ' mosart_gridded_filename]);
 end
     
-ncid_inp = netcdf.open(mosart_gridded_surfdata_filename,'NC_NOWRITE');
+ncid_inp = netcdf.open(mosart_gridded_filename,'NC_NOWRITE');
 ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
 
-info_inp = ncinfo(mosart_gridded_surfdata_filename);
+info_inp = ncinfo(mosart_gridded_filename);
 
 [ndims,nvars,ngatts,unlimdimid] = netcdf.inq(ncid_inp);
 
@@ -69,8 +74,6 @@ info_inp = ncinfo(mosart_gridded_surfdata_filename);
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 dimid(1) = netcdf.defDim(ncid_out,'gridcell',ncells);
 dimid(2) = netcdf.defDim(ncid_out,'nele',11);
-% dimid(1) = netcdf.defDim(ncid_out,'lat',1);
-% dimid(2) = netcdf.defDim(ncid_out,'lon',sum(in(:)));
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
@@ -206,7 +209,7 @@ end
 if read_ele == 1 && found_ele == 0
 ele = zeros(ncells,11);
     for i = 1 : 11
-        data = ncread(mosart_gridded_surfdata_filename,strcat('ele',num2str(i-1)));
+        data = ncread(mosart_gridded_filename,strcat('ele',num2str(i-1)));
         ele(:,i) = data(in);
     end
     netcdf.putVar(ncid_out,nvars,ele);
