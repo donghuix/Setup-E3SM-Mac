@@ -1,5 +1,8 @@
 function fname_out = generate_wm_1d(lon,lat,wmfile,out_netcdf_dir, wm_usrdat_name)
-    
+%
+% lon, lat: domain grid cells coordinate
+% wmfile: template water management parameter file 
+%
     ncell = length(lon);
 
     k = boundary(lon,lat,1);
