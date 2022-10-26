@@ -94,14 +94,14 @@ for idim = 1:ndims
                 lonlat_found = 1;
                 dimname = 'gridcell';
                 dimlen = length(long_region);
-                %disp(['Out: Dimension name:' dimname])
+                disp(['Out: Dimension name:' dimname])
                 dimid(idim) = netcdf.defDim(ncid_out,dimname,dimlen);
             end
         case 'time'
-            %disp(['Out: Dimension name:' dimname])
+            disp(['Out: Dimension name:' dimname])
             dimid(idim) = netcdf.defDim(ncid_out,dimname,netcdf.getConstant('NC_UNLIMITED'));
         otherwise
-            %disp(['Out: Dimension name:' dimname])
+            disp(['Out: Dimension name:' dimname])
             for ii=1:length(info_inp.Dimensions)
                 if (strcmp(info_inp.Dimensions(ii).Name,dimname) == 1)
                     [dimname, dimlen] = netcdf.inqDim(ncid_inp,ii-1);
@@ -118,15 +118,19 @@ end
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 for ivar = 1:nvars
     [varname,xtype,dimids,natts] = netcdf.inqVar(ncid_inp,ivar-1);
-    %disp(['varname : ' varname ' ' num2str(dimids)])
+    disp(['varname : ' varname ' ' num2str(dimids)])
     if(isempty(dimids)==0)
-        if(dimids(1) == 0 && dimids(2) == 1)
+        if (dimids(1) == 1 && dimids(2) == 0)
+            dimids_new =  [0 dimids(3:end)-1];
+            dimids = dimids_new;
+        elseif (dimids(1) == 0 && dimids(2) == 1)
             dimids_new =  [0 dimids(3:end)-1];
             dimids = dimids_new;
         else
             dimids = dimids - 1;
         end
     end
+    disp(['varname : ' varname ' ' num2str(dimids)])
     varid(ivar) = netcdf.defVar(ncid_out,varname,xtype,dimids);
     if strcmp(varname,'AREA')
         fdrain_dimids = dimids;
