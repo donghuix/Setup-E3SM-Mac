@@ -59,7 +59,7 @@ for idim = 1:ndims
             if (lonlat_found == 0)
                 lonlat_found = 1;
                 dimname = 'gridcell';
-                dimlen = length(long_region);
+                dimlen = length(lon_region);
                 disp(['Out: Dimension name:' dimname])
                 dimid(idim) = netcdf.defDim(ncid_out,dimname,dimlen);
             end
@@ -119,24 +119,24 @@ netcdf.putAtt(ncid_out,varid,'Interpolate_from' , fname_in);
 netcdf.endDef(ncid_out);
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-% Find the nearest neighbor index for (long_region,lati_xy) within global
+% Find the nearest neighbor index for (lon_region,lat_xy) within global
 % dataset
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 % allocate memoery
-ii_idx = zeros(size(long_region));
-jj_idx = zeros(size(long_region));
+ii_idx = zeros(size(lon_region));
+jj_idx = zeros(size(lon_region));
 
 % find the index
-for ii=1:size(long_region,1)
-    for jj=1:size(long_region,2)
-        dist = (longxy - long_region(ii,jj)).^2 + (latixy - lati_region(ii,jj)).^2;
+for ii=1:size(lon_region,1)
+    for jj=1:size(lon_region,2)
+        dist = (longxy - lon_region(ii,jj)).^2 + (latixy - lat_region(ii,jj)).^2;
         [nearest_cell_i_idx, nearest_cell_j_idx] = find( dist == min(min(dist)));
         if (length(nearest_cell_i_idx) > 1)
-            [i1,j1] = find(longxy == long_region(ii,jj) & latixy == lati_region(ii,jj));
+            [i1,j1] = find(longxy == lon_region(ii,jj) & latixy == lat_region(ii,jj));
             
-            disp(['  WARNING: Site with (lat,lon) = (' sprintf('%f',lati_region(ii,jj)) ...
-                sprintf(',%f',long_region(ii,jj)) ') has more than one cells ' ...
+            disp(['  WARNING: Site with (lat,lon) = (' sprintf('%f',lat_region(ii,jj)) ...
+                sprintf(',%f',lon_region(ii,jj)) ') has more than one cells ' ...
                 'that are equidistant.' char(10) ...
                 '           Picking the first closest grid cell.']);
             for kk = 1:length(nearest_cell_i_idx)
@@ -175,9 +175,9 @@ for ivar = 1:nvars
                     netcdf.putVar(ncid_out,ivar-1,0,length(data),data);
                 case 2
                     if (min(vardimids) == 0)
-                        data_2d = zeros(size(long_region));
-                        for ii=1:size(long_region,1)
-                            for jj=1:size(long_region,2)
+                        data_2d = zeros(size(lon_region));
+                        for ii=1:size(lon_region,1)
+                            for jj=1:size(lon_region,2)
                                 data_2d(ii,jj) = data(ii_idx(ii,jj),jj_idx(ii,jj));
                             end
                         end
@@ -200,8 +200,8 @@ for ivar = 1:nvars
                     end
                 case 3
                     if (min(vardimids) == 0)
-                        nx = size(long_region,1);
-                        ny = size(long_region,2);
+                        nx = size(lon_region,1);
+                        ny = size(lon_region,2);
                         nz = size(data,3);
                         data_3d = zeros(nx,ny,nz);
                         for ii = 1:nx
@@ -230,8 +230,8 @@ for ivar = 1:nvars
                     end
                 case 4
                     if (min(vardimids) == 0)
-                        nx = size(long_region,1);
-                        ny = size(long_region,2);
+                        nx = size(lon_region,1);
+                        ny = size(lon_region,2);
                         nz = size(data,3);
                         na = size(data,4);
                         data_4d = zeros(nx,ny,nz,na);
