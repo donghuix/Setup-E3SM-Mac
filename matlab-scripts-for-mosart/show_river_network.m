@@ -1,4 +1,4 @@
-function show_river_network(fname,thre,col)
+function h = show_river_network(fname,thre,col)
     
     if nargin < 3
         col = 'b-';
@@ -29,7 +29,7 @@ function show_river_network(fname,thre,col)
                     else
                         [i2,j2] = find(ID == dnID(i,j));
                         if ratio(i,j) > thre
-                        plot([longxy(i,j) longxy(i2,j2)], [latixy(i,j) latixy(i2,j2)], col,'LineWidth',2); hold on;
+                        h = plot([longxy(i,j) longxy(i2,j2)], [latixy(i,j) latixy(i2,j2)], col,'LineWidth',2); hold on;
                         end
                         i2 = []; j2 = [];
                     end
@@ -46,7 +46,7 @@ function show_river_network(fname,thre,col)
             else
                 i2 = find(ID == dnID(i));
                 if lw(i) > thre
-                plot([longxy(i) longxy(i2)], [latixy(i) latixy(i2)], col,'LineWidth',lw(i)); hold on;
+                h = plot([longxy(i) longxy(i2)], [latixy(i) latixy(i2)], col,'LineWidth',lw(i)); hold on;
                 end
                 i2 = [];
             end

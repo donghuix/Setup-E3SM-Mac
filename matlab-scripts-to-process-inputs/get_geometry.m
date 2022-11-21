@@ -19,17 +19,34 @@ function [rwid,rdep,flood_2yr] = get_geometry(xc,yc,ID,dnID,area,aw,ad)
     k = 1;
     fprintf('Generating nearest neighbour mapping...\n');
     inear = NaN(length(xc),1);
+    onepercent = floor(length(xc) / 100);
     for i = 1 : length(xc)
-        disp(i);
+        if mod(i,onepercent) == 0
+            fprintf([' ' num2str(i/onepercent) '% ']);
+        elseif i == length(xc)
+            fprintf(' 100% \n');
+        end
         dist = sqrt((lon - xc(i)).^2 + (lat - yc(i)).^2);
         %find(dist == min(dist(:)))
-        inear(i) = find(dist == min(dist(:)));
+        ind  = find(dist == min(dist(:)));
+        if isempty(ind)
+            error('Cannot find nearest neighbour!');
+        elseif length(ind) > 1
+            disp([num2str(length(ind)) ' grid cells are found!']);
+            disp('*** Warning: This first one is used. ***');
+            ind = ind(1);
+        end
+        inear(i) = ind;
     end
     
     fprintf('Reading daily runoff...\n');
     for i = 1979 : 2009
+        if mod(i-1979+1,10) == 0
+            fprintf(['Year ' num2str(i) '\n']);
+        else
+            fprintf(['Year ' num2str(i)]);
+        end
         for j = 1 : 365
-            fprintf(['Year ' num2str(i) ', Day ' num2str(j) '\n']);
             load(['/Users/xudo627/DATA/Runoff/runoff/RUNOFF05_' num2str(i) '_' num2str(j) '.mat']);
             runoff(:,k) = ro05(inear);
             k = k + 1;
@@ -39,7 +56,11 @@ function [rwid,rdep,flood_2yr] = get_geometry(xc,yc,ID,dnID,area,aw,ad)
     in = cell(length(xc),1);
     fprintf('Searching for contribuing area...\n');
     for i = 1 : length(xc)
-        disp(i);
+        if mod(i,onepercent) == 0
+            fprintf([' ' num2str(i/onepercent) '% ']);
+        elseif i == length(xc)
+            fprintf(' 100% \n');
+        end
         [ioutlet, icontributing] = find_contributing_cells(xc,yc,ID,dnID,area, ...
                                                            xc(i),yc(i));
         in{i} = [ioutlet; icontributing];
@@ -47,7 +68,11 @@ function [rwid,rdep,flood_2yr] = get_geometry(xc,yc,ID,dnID,area,aw,ad)
     
     fprintf('Mapping runoff to discharge...\n');
     for i = 1 : length(xc)
-        disp(i);
+        if mod(i,onepercent) == 0
+            fprintf([' ' num2str(i/onepercent) '% ']);
+        elseif i == length(xc)
+            fprintf(' 100% \n');
+        end
         discharge(i,:) = nansum(runoff(in{i},:) .* area(in{i}) ./1000./(3*60*60),1);
     end
     for i = 1 : 31
