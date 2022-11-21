@@ -11,12 +11,14 @@
 % Donghui Xu (donghui.xu@pnnl.gov)
 % 11/18/2022
 % ======================================================================= %
-function fname_out = CreateELM_LandUse( lon_region, lat_region,        ...
+function fname_out = CreateELM_LandUse( lon_region, lat_region, frac,   ...
                                         fname_in, out_netcdf_dir, usrdat_name )
 
 % Default dimension is lon * lat
 latixy = ncread(fname_in,'LATIXY');
 longxy = ncread(fname_in,'LONGXY');
+latixy(frac <= 0) = NaN;
+longxy(frac <= 0) = NaN;
 
 % landuse.timeseries_NLDAS_hist_50pfts_simyr1850-2015_erosion_c191004.nc
 fname_out = sprintf('%s/landuse.timeseries_%s_%s.nc',...
@@ -60,14 +62,14 @@ for idim = 1:ndims
                 lonlat_found = 1;
                 dimname = 'gridcell';
                 dimlen = length(lon_region);
-                disp(['Out: Dimension name:' dimname])
+                disp(['Out: Dimension name:' dimname ', len =' num2str(dimlen)])
                 dimid(idim) = netcdf.defDim(ncid_out,dimname,dimlen);
             end
         case 'time'
-            disp(['Out: Dimension name:' dimname])
+            disp(['Out: Dimension name:' dimname ', len =' num2str(dimlen)])
             dimid(idim) = netcdf.defDim(ncid_out,dimname,netcdf.getConstant('NC_UNLIMITED'));
         otherwise
-            disp(['Out: Dimension name:' dimname])
+            disp(['Out: Dimension name:' dimname ', len =' num2str(dimlen)])
             for ii=1:length(info_inp.Dimensions)
                 if (strcmp(info_inp.Dimensions(ii).Name,dimname) == 1)
                     [dimname, dimlen] = netcdf.inqDim(ncid_inp,ii-1);
@@ -169,9 +171,10 @@ for ivar = 1:nvars
             
             switch length(vardimids)
                 case 0
+                    disp(['0: ' varname]);
                     netcdf.putVar(ncid_out,ivar-1,data);
                 case 1
-                    data = 0;
+                    disp(['1: ' varname]);
                     netcdf.putVar(ncid_out,ivar-1,0,length(data),data);
                 case 2
                     if (min(vardimids) == 0)
@@ -223,8 +226,11 @@ for ivar = 1:nvars
                         end
                         data_3d_new = reshape(data_3d,dims_new);
                         data_3d = data_3d_new;
-
-                        netcdf.putVar(ncid_out,ivar-1,data_3d);
+                        
+                        disp(varname);
+                        disp(['original size is ' num2str(size(data))]);
+                        disp(['new size is      ' num2str(size(data_3d))]);
+                        netcdf.putVar(ncid_out,ivar-1,zeros(length(size(data_3d)),1)',size(data_3d),data_3d);
                     else
                         netcdf.putVar(ncid_out,ivar-1,data);
                     end

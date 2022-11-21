@@ -73,13 +73,17 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             case 0
                 disp(data);
             case 1
-                if strcmp(varname,'natpft') || strcmp(varname,'time')
+                if strcmp(varname,'natpft') || strcmp(varname,'time') || strcmp(varname,'GLC_MEC')
 %                     continue;
                 else
                     data = repmat(data,ntot,1);
                 end
             case 2
-                data = repmat(data,ntot,1);
+                if strcmp(varname,'GLC_MEC')
+                    
+                else
+                    data = repmat(data,ntot,1);
+                end
             case 3
                 data = repmat(data,ntot,1,1);
             otherwise
@@ -142,6 +146,8 @@ function generate_lnd_surface_uq(surface_gridded_filename,fname_out,ntot, ...
             disp('kh2osfc is found!!!\n\n');
             data = kh2osfc;
         end
+        disp(varname);
+        disp(size(data));
         netcdf.putVar(ncid_out,ivar-1,data);
     end
 
