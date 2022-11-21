@@ -146,6 +146,7 @@ varid = netcdf.getConstant('GLOBAL');
 [~,user_name]=system('echo $USER');
 netcdf.putAtt(ncid_out,varid,'Created_by' ,user_name(1:end-1));
 netcdf.putAtt(ncid_out,varid,'Created_on' ,datestr(now,'ddd mmm dd HH:MM:SS yyyy '));
+netcdf.putAtt(ncid_out,varid,'Interpolate_from' ,mosart_gridded_filename);
 netcdf.endDef(ncid_out);
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

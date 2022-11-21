@@ -160,6 +160,7 @@ function generate_mosart_from_hexwatershed(fhex,ftem,fmos,fdom,show_river,show_a
     [~,user_name]=system('echo $USER');
     netcdf.putAtt(ncid_out,varid,'Created_by' ,user_name(1:end-1));
     netcdf.putAtt(ncid_out,varid,'Created_on' ,datestr(now,'ddd mmm dd HH:MM:SS yyyy '));
+    netcdf.putAtt(ncid_out,varid,'Interpolate_from' ,ftem);
     netcdf.endDef(ncid_out);
 
     % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
