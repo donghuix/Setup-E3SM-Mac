@@ -24,11 +24,19 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
         target_area = [];
     end
     
-    dnID = ncread(fname,'dnID');
-    ID   = ncread(fname,'ID');
-    latixy = ncread(fname,'latixy');
-    longxy = ncread(fname,'longxy');
-    area   = ncread(fname,'area');
+    if isstring(fname)
+        dnID   = ncread(fname,'dnID');
+        ID     = ncread(fname,'ID');
+        latixy = ncread(fname,'latixy');
+        longxy = ncread(fname,'longxy');
+        area   = ncread(fname,'area');
+    else
+        dnID   = fname.dnID;
+        ID     = fname.ID;
+        latixy = fname.latixy;
+        longxy = fname.longxy;
+        area   = fname.area;
+    end
     
     if ~isempty(target_area)
         if target_area < nanmean(area)
