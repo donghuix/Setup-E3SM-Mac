@@ -24,7 +24,7 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
         target_area = [];
     end
     
-    if isstring(fname)
+    if isstring(fname) || ischar(fname)
         dnID   = ncread(fname,'dnID');
         ID     = ncread(fname,'ID');
         latixy = ncread(fname,'latixy');
