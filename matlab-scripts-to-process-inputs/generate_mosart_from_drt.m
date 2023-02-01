@@ -1,8 +1,8 @@
 
-function generate_mosart_from_hexwatershed(fhex,ftem,fmos,fdom,show_river,show_attributes)
+function generate_mosart_from_drt(drt,ftem,fmos,fdom,show_river)
 
 % Input: 
-% fhex: HexWaterhsed output
+% drt: DRT flow directions, distance, drainage area
 % ftem: Template MOSART input file to intepolate on
 % fmos: MOSART input file
 % fdom: Domain file
@@ -14,91 +14,28 @@ function generate_mosart_from_hexwatershed(fhex,ftem,fmos,fdom,show_river,show_a
     addpath('/Users/xudo627/donghui/mylib/m/');
     
     add_ele = 0;
-    
-    str = fileread(fhex);
-    data = jsondecode(str);
 
-    lon      = [data(:).dLongitude_center_degree]'; 
-    lat      = [data(:).dLatitude_center_degree]';
-    area     = [data(:).Area]';
-    globalID = [data(:).lCellID]';
-    globaldnID     = [data(:).lCellID_downslope]';
-    Elevation      = [data(:).Elevation]';
-    areaTotal2     = [data(:).DrainageArea]';
-    dSlope_between = [data(:).dSlope_between]'; 
-    rlen           = [data(:).dLength_flowline]';% This is conceptual length. 
+    lon        = drt.longxy;
+    lat        = drt.latixy;
+    area       = drt.area;
+    ID         = drt.ID;
+    dnID       = drt.dnID;
+    areaTotal2 = drt.facc;
+    rlen       = drt.flen;% This is conceptual length. 
                                                  % TODO: replace with actual river legnth
-    numc     = length(globalID);
+    numc     = length(ID);
     % Read vertices
-    lonv = NaN(8,numc);
-    latv = NaN(8,numc);
-    numv = NaN(length(globalID),1);
-    for i = 1 : numc
-        tmpx = [data(i).vVertex(:).dLongitude_degree];
-        tmpy = [data(i).vVertex(:).dLatitude_degree];
-        numv(i) = length(tmpx);
-        lonv(1:length(tmpx),i) = tmpx;
-        latv(1:length(tmpy),i) = tmpy;
-    end
-
-    % Convert ID
-    ID = 1 : length(globalID);
-    ID = ID';
-    dnID = NaN(length(globalID),1);
-
-    for i = 1 : length(ID)
-        if globaldnID(i) == -9999
-            dnID(i) = -9999;
-        else
-            ind = find(globalID == globaldnID(i));
-            if isempty(ind)
-                dnID(i) = -9999;
-            else
-                dnID(i) = ID(ind);
-            end
-        end
-    end
-
-    fdir = ones(length(globalID),1);
+    lonv = drt.xv;
+    latv = drt.yv;
+    fdir = ones(numc,1);
     fdir(dnID == -9999) = 0;
-    frac = ones(length(globalID),1);
+    frac = ones(numc,1);
     
-    if exist('channel_geometry.mat','file')
-        load('channel_geometry.mat');
+    if exist(drt.geometry_file,'file')
+        load(drt.geometry_file);
     else
         [rwid,rdep,flood_2yr] = get_geometry(lon,lat,ID,dnID,area);
-        save('channel_geometry.mat','rwid','rdep','flood_2yr');
-    end
-    
-%     if show_river
-%         figure;
-%         for i = 1 : length(ID)
-%             if dnID(i) ~= -9999
-%                 plot([lon(ID(i)) lon(dnID(i))],[lat(ID(i)) lat(dnID(i))],'b-','LineWidth',1.5);hold on;
-%             else
-%                 plot(lon(ID(i)),lat(ID(i)),'r*'); hold on;
-%             end
-%         end
-%     end
-    
-    if show_attributes
-        figure;
-        subplot(1,3,1);
-        for i = 4 : 8
-            patch(lonv(1:i,numv == i),latv(1:i,numv == i),rlen(numv == i),'LineStyle','none'); colorbar; hold on;
-        end
-        set(gca,'ColorScale','log');
-        title('River length [m]','FontSize',15,'FontWeight','bold');
-        subplot(1,3,2);
-        for i = 4 : 8
-            patch(lonv(1:i,numv == i),latv(1:i,numv == i),rwid(numv == i),'LineStyle','none'); colorbar; hold on;
-        end
-        title('River width [m]','FontSize',15,'FontWeight','bold');
-        subplot(1,3,3);
-        for i = 4 : 8
-            patch(lonv(1:i,numv == i),latv(1:i,numv == i),rdep(numv == i),'LineStyle','none'); colorbar; hold on;
-        end
-        title('River depth [m]','FontSize',15,'FontWeight','bold');
+        save(drt.geometry_file,'rwid','rdep','flood_2yr');
     end
 
     % Prepare MOSART inputfile by creating the netcdf file
@@ -175,8 +112,6 @@ function generate_mosart_from_hexwatershed(fhex,ftem,fmos,fdom,show_river,show_a
             netcdf.putVar(ncid_out,ivar-1,lat);
         elseif strcmp(varname,'lon') || strcmp(varname,'longxy')
             netcdf.putVar(ncid_out,ivar-1,lon);
-        elseif strcmp(varname,'rslp') || strcmp(varname,'tslp')
-            netcdf.putVar(ncid_out,ivar-1,dSlope_between);
         elseif strcmp(varname,'ID')
             netcdf.putVar(ncid_out,ivar-1,ID);
         elseif strcmp(varname,'dnID')
