@@ -46,6 +46,15 @@ elseif grid_rank == 2
     end
 end
 
+for i = 1 : grid_size
+    for j = 1 : grid_corners
+        if isnan(grid_corner_lat(j,i)) && j > 1
+            grid_corner_lat(j,i) = grid_corner_lat(j-1,i);
+            grid_corner_lon(j,i) = grid_corner_lon(j-1,i);
+        end
+    end
+end
+
 ncid = netcdf.create(fname_out,'NC_CLOBBER');
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
