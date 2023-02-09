@@ -9,14 +9,23 @@ area = ncread(fname_in,'area');
 
 if length(size(xc)) == 2 && size(xc,2) ~= 1
     grid_rank = 2;
-    [m,n] = size(xc);
+    [ni,nj] = size(xc);
 else
     grid_rank = 1;
-    m = length(xc);
-    n = 1;
+    ni = length(xc);
+    nj = 1;
 end
 
-grid_size = m*n;
+[a,b,c] = size(xv);
+if b == ni && c == nj
+    nv = a;
+    mode = 1; % [nv,ni,nj]
+elseif a == ni && b == nj
+    nv = c;
+    mode = 2; % [ni,nj,nv]
+end
+
+grid_size = ni*nj;
 grid_corners = size(xv,1);
 
 grid_center_lat = NaN(grid_size,1);
@@ -29,8 +38,17 @@ grid_area       = NaN(grid_size,1);
 if grid_rank == 1
     grid_center_lat = yc;
     grid_center_lon = xc;
-    grid_corner_lat = yv;
-    grid_corner_lon = xv;
+    if mode == 1
+        grid_corner_lat = yv;
+        grid_corner_lon = xv;
+    elseif mode == 2
+        xv = reshape(xv,[ni,nv]);
+        yv = reshape(yv,[ni,nv]);
+        grid_corner_lat = yv';
+        grid_corner_lon = xv';
+    else
+        error('Check data dimension');
+    end
     grid_imask      = mask;
     grid_area       = area;
 elseif grid_rank == 2
@@ -39,10 +57,19 @@ elseif grid_rank == 2
     grid_imask      = mask(:);
     grid_area       = area(:);
     for i = 1 : grid_corners
-        tmp = yv(i,:,:);
-        grid_corner_lat(i,:) = tmp(:);
-        tmp = xv(i,:,:);
-        grid_corner_lon(i,:) = tmp(:);
+        if mode == 1
+            tmp = yv(i,:,:);
+            grid_corner_lat(i,:) = tmp(:);
+            tmp = xv(i,:,:);
+            grid_corner_lon(i,:) = tmp(:);
+        elseif mode == 2
+            tmp = yv(:,:,i);
+            grid_corner_lat(i,:) = tmp(:);
+            tmp = xv(:,:,i);
+            grid_corner_lon(i,:) = tmp(:);
+        else
+            error('Check the data dimension!');
+        end
     end
 end
 
