@@ -25,8 +25,8 @@ elseif a == ni && b == nj
     mode = 2; % [ni,nj,nv]
 end
 
-grid_size = ni*nj;
-grid_corners = size(xv,1);
+grid_size    = ni*nj;
+grid_corners = nv;
 
 grid_center_lat = NaN(grid_size,1);
 grid_center_lon = NaN(grid_size,1);
@@ -133,9 +133,9 @@ netcdf.putAtt(ncid,varid2,'Created_on' ,datestr(now,'ddd mmm dd HH:MM:SS yyyy ')
 netcdf.endDef(ncid);
 
 if grid_rank == 1
-    netcdf.putVar(ncid,1-1,[m]);
+    netcdf.putVar(ncid,1-1,[ni]);
 elseif grid_rank == 2
-    netcdf.putVar(ncid,1-1,[m;n]);
+    netcdf.putVar(ncid,1-1,[ni;nj]);
 end
 netcdf.putVar(ncid,2-1,grid_center_lat);
 netcdf.putVar(ncid,3-1,grid_center_lon);
