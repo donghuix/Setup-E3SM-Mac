@@ -131,8 +131,6 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	* ```./case.setup``` and ```./case.build```
 
 ## 7. User defined land + river grid on Cori
-	
-* Use apcraig/mosart/usrdat branch: ```git checkout apcraig/mosart/usrdat``` (this branch is already merged to master)
 
 * Update the submodules: ```git submodule update --init```
 
@@ -144,8 +142,8 @@ Note: Need to setup SSH key for Github: https://help.github.com/en/github/authen
 	```
 * Create new case
 	```
-	RES=CLMMOS_USRDAT
-	COMPSET=ICLM45
+	RES=ELMMOS_USRDAT
+	COMPSET=IELM
 	MACH=cori-knl
 	COMPILER=gnu
 	PROJECT=project-name
