@@ -16,16 +16,20 @@ function [gsim,gsim2] = search_GSIM_gauge(X,Y,xo,yo,show_plot)
     %     disp(ind2);
         ind = find((lon(in) - xo).^2 + (lat(in) - yo).^2 == min((lon(in) - xo).^2 + (lat(in) - yo).^2));
 
-        if show_plot
-            figure;
-            plot(X,Y,'kx'); hold on;
-            plot(lon(in),lat(in),'ro');
-            scatter(lon(in(ind)),lat(in(ind)),100,'s','MarkerFaceColor','g','MarkerEdgeColor','k');
-        end
         gsim = gsim_no{in(ind)};
         gsim2= gsim_no(in(ind2));
     else
-        in = inpolygon(lon,lat,X,Y);
+        in    = inpolygon(lon,lat,X,Y);
+        gsim  = gsim_no(in);
+        gsim2 = [];
     end
+
+    if show_plot
+        figure;
+        plot(X,Y,'kx'); hold on;
+        plot(lon(in),lat(in),'ro');
+        %scatter(lon(in(ind)),lat(in(ind)),100,'s','MarkerFaceColor','g','MarkerEdgeColor','k');
+    end
+
 end
 
