@@ -1,4 +1,4 @@
-function [gsim,gsim2] = search_GSIM_gauge(X,Y,xo,yo,show_plot)
+function [gsims,in,gsim2] = search_GSIM_gauge(X,Y,xo,yo,show_plot)
     
     load('gsim_info.mat');
     
@@ -16,11 +16,11 @@ function [gsim,gsim2] = search_GSIM_gauge(X,Y,xo,yo,show_plot)
     %     disp(ind2);
         ind = find((lon(in) - xo).^2 + (lat(in) - yo).^2 == min((lon(in) - xo).^2 + (lat(in) - yo).^2));
 
-        gsim = gsim_no{in(ind)};
+        gsims = gsim_no{in(ind)};
         gsim2= gsim_no(in(ind2));
     else
         in    = inpolygon(lon,lat,X,Y);
-        gsim  = gsim_no(in);
+        gsims  = gsim_no(in);
         gsim2 = [];
     end
 

@@ -54,7 +54,14 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
     if isempty(target_area)
         search_N = 1;
     else
-        search_N = 20;
+        if target_area/nanmean(area(:)) < 5
+            search_N = floor(target_area/nanmean(area(:)))/2;
+            if search_N < 4
+                search_N = 4;
+            end
+        else
+            search_N = 20;
+        end
     end
     
     for ifound = 1 : search_N
@@ -94,15 +101,16 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
         end
         if ~isempty(target_area)
             drainage_area = nansum(area([ioutlet; icontributing]));
-            %disp(drainage_area/2.59e+6);
             if drainage_area/target_area > 0.5 && drainage_area/target_area < 1.5
-                fprintf(['MOSART drainage area is ' num2str(drainage_area/1e6) 'km^{2}\n']);
-                fprintf(['GSIM drainage area is ' num2str(target_area/1e6) 'km^{2}\n']);
+%                 fprintf(['MOSART drainage area is ' num2str(drainage_area/1e6) 'km^{2}\n']);
+%                 fprintf(['GSIM drainage area is ' num2str(target_area/1e6) 'km^{2}\n']);
                 break;
             end
         end
     end
     if ~isempty(target_area)
+        % If cannot find an approporiate grid cell then use the grid cell 
+        % that is nearest to the outlet
         if drainage_area/target_area < 0.5 || drainage_area/target_area > 1.5
             ioutlet = I(1);
             outletg = ID(ioutlet);

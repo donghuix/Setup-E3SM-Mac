@@ -25,6 +25,8 @@ function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station,read_bounda
             Sh(1).X =NaN;
             Sh(1).Y =NaN;
         end
+    elseif read_boundary == 0
+        Sh = [];
     end
     filename = fullfile('/Users/xudo627/DATA/GSIM_indices/TIMESERIES/monthly',strcat(station,'.mon'));
     fid = fopen(filename);

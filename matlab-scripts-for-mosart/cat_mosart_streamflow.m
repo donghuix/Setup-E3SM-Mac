@@ -24,7 +24,9 @@ function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
             ioutlets(i) = find_mosart_cell(fname,lons(i),lats(i),areas(i));
         end
     end
-
+    
+    tenperc = ceil(0.1*length(files));
+    fprintf('\n------------ Reading MOSART outputs------------\n\n');
     % Read streamflow from the outputs
     SFTS = NaN(length(lons),length(files));
     if run_parallel
@@ -44,6 +46,9 @@ function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
     else
         for i = 1 : length(files)
             filename = fullfile(files(i).folder,files(i).name);
+            if mod(i,tenperc) == 0
+                fprintf(['.' num2str(i/tenperc*10) '%%']);
+            end
             RDL = ncread(filename,'RIVER_DISCHARGE_OVER_LAND_LIQ');
             RDO = ncread(filename,'RIVER_DISCHARGE_TO_OCEAN_LIQ');
             for j = 1 : length(lons)
@@ -54,6 +59,8 @@ function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
                 end
             end
         end
+        fprintf('.100%% Done!\n');
+        fprintf('\n-----------------------------------------------\n\n');
     end
 end
 
