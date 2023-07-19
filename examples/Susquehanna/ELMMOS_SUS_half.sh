@@ -4,7 +4,7 @@ MACH=compy
 COMPILER=intel
 PROJECT=esmd
 
-SRC_DIR=~/e3sm_trial
+SRC_DIR=~/e3sm-master
 CASE_DIR=${SRC_DIR}/cime/scripts
 
 cd ${SRC_DIR}/cime/scripts
