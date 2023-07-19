@@ -3,11 +3,25 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
 % startdate should be yyyy-mm-dd format
     
     QRUNOFF = QOVER + QDRAI; % total runoff is the sum of surface and subsurface runoff
-    [nlon,nlat,nt] = size(QDRAI);
+
+    if length(size(QDRAI)) == 2 
+        isgrid2d = false;
+        [nlon,nt] = size(QDRAI);
+        nlat = 1;
+    elseif length(size(QDRAI)) == 3 
+        isgrid2d = true;
+        [nlon,nlat,nt] = size(QDRAI);
+    else
+        error('check dimension of QDRAI!!!');
+    end
     disp(nlon)
     disp(nlat)
     disp(nt)
-    assert(nlon == length(lon) && nlat == length(lat) && nt == length(time));
+    if isgrid2d
+        assert(nlon == length(lon) && nlat == length(lat) && nt == length(time));
+    else
+        assert(nlon == length(lon) && nlon == length(lat) && nt == length(time));
+    end
     
     netcdf.setDefaultFormat('NC_FORMAT_64BIT'); % To write for large file
     ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
