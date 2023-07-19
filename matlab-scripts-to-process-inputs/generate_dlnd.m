@@ -8,15 +8,16 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
         isgrid2d = false;
         [nlon,nt] = size(QDRAI);
         nlat = 1;
+        disp(['DLND forcing is 1D with dimensions gridcell = ' num2str(nlon)]);
     elseif length(size(QDRAI)) == 3 
         isgrid2d = true;
         [nlon,nlat,nt] = size(QDRAI);
+        disp(['DLND forcing is 2D with dimensions lat = ' num2str(nlat) ', lon = ' num2str(nlon)]);
     else
         error('check dimension of QDRAI!!!');
     end
-    disp(nlon)
-    disp(nlat)
-    disp(nt)
+    disp(['TIME dimension is nt = ' num2str(nt)]);
+    
     if isgrid2d
         assert(nlon == length(lon) && nlat == length(lat) && nt == length(time));
     else
@@ -31,10 +32,14 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
 %                           Define dimensions
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
-    dimid(1) = netcdf.defDim(ncid_out,'lat',nlat);
-    dimid(2) = netcdf.defDim(ncid_out,'lon',nlon);
-    dimid(3) = netcdf.defDim(ncid_out,'time',nt);
+    if isgrid2d
+        dimid(1) = netcdf.defDim(ncid_out,'lat',nlat);
+        dimid(2) = netcdf.defDim(ncid_out,'lon',nlon);
+        dimid(3) = netcdf.defDim(ncid_out,'time',nt);
+    else
+        dimid(1) = netcdf.defDim(ncid_out,'gridcell',nlon);
+        dimid(2) = netcdf.defDim(ncid_out,'time',nt);
+    end
     
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
@@ -44,36 +49,60 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     varnames = {'QDRAI', 'QOVER', 'QRUNOFF', 'lat', 'lon', 'time'};
     nvars = length(varnames);
     ivar = 1;
-    varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(2),dimid(1),dimid(3)]); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(2),dimid(1),dimid(3)]); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(1),dimid(2)]); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','subsurface runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 2;
-    varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(2),dimid(1),dimid(3)]); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(2),dimid(1),dimid(3)]); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(1),dimid(2)]); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','surface runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 3;
-    varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(2),dimid(1),dimid(3)]); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(2),dimid(1),dimid(3)]); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(1),dimid(2)]); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','total runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 4;
-    varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_north');
     netcdf.putAtt(ncid_out,ivar-1,'axis','Y');
     
     ivar = 5;
-    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(1)); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_east');
     netcdf.putAtt(ncid_out,ivar-1,'axis','X');
     
     ivar = 6;
-    varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(3)); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(3));
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(2));
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','time');
     if isleap
         netcdf.putAtt(ncid_out,ivar-1,'calendar','gregorian');
