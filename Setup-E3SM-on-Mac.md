@@ -37,7 +37,7 @@ Note for install XML::LibXML
 * git submodule update  --init  --recursive
 
 Note: Need to setup SSH key for Github: https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-
+Note: May need to do ``chmod 600 ~/.ssh/config``
 ## 5. Test case
 
 * Create a ```.cime``` folder in home director
