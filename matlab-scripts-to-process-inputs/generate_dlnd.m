@@ -8,7 +8,7 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
         isgrid2d = false;
         [nlon,nt] = size(QDRAI);
         nlat = 1;
-        disp(['DLND forcing is 1D with dimensions gridcell = ' num2str(nlon)]);
+        disp(['DLND forcing is 1D with dimensions lat = 1, lon = ' num2str(nlon)]);
     elseif length(size(QDRAI)) == 3 
         isgrid2d = true;
         [nlon,nlat,nt] = size(QDRAI);
@@ -32,14 +32,9 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
 %                           Define dimensions
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    if isgrid2d
-        dimid(1) = netcdf.defDim(ncid_out,'lat',nlat);
-        dimid(2) = netcdf.defDim(ncid_out,'lon',nlon);
-        dimid(3) = netcdf.defDim(ncid_out,'time',nt);
-    else
-        dimid(1) = netcdf.defDim(ncid_out,'gridcell',nlon);
-        dimid(2) = netcdf.defDim(ncid_out,'time',nt);
-    end
+    dimid(1) = netcdf.defDim(ncid_out,'lat',nlat);
+    dimid(2) = netcdf.defDim(ncid_out,'lon',nlon);
+    dimid(3) = netcdf.defDim(ncid_out,'time',nt);
     
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %
@@ -49,29 +44,17 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     varnames = {'QDRAI', 'QOVER', 'QRUNOFF', 'lat', 'lon', 'time'};
     nvars = length(varnames);
     ivar = 1;
-    if isgrid2d
-        varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(2),dimid(1),dimid(3)]); 
-    else
-        varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(1),dimid(2)]); 
-    end
+    varid(ivar) = netcdf.defVar(ncid_out,'QDRAI',6,[dimid(2),dimid(1),dimid(3)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','subsurface runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 2;
-    if isgrid2d
-        varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(2),dimid(1),dimid(3)]); 
-    else
-        varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(1),dimid(2)]); 
-    end
+    varid(ivar) = netcdf.defVar(ncid_out,'QOVER',6,[dimid(2),dimid(1),dimid(3)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','surface runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
     ivar = 3;
-    if isgrid2d
-        varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(2),dimid(1),dimid(3)]); 
-    else
-        varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(1),dimid(2)]); 
-    end
+    varid(ivar) = netcdf.defVar(ncid_out,'QRUNOFF',6,[dimid(2),dimid(1),dimid(3)]); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','total runoff');
     netcdf.putAtt(ncid_out,ivar-1,'units','mm/s');
     
@@ -79,7 +62,7 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     if isgrid2d
         varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
     else
-        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
+        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(2)); 
     end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','latitude');
@@ -87,22 +70,14 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     netcdf.putAtt(ncid_out,ivar-1,'axis','Y');
     
     ivar = 5;
-    if isgrid2d
-        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
-    else
-        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(1)); 
-    end
+    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_east');
     netcdf.putAtt(ncid_out,ivar-1,'axis','X');
     
     ivar = 6;
-    if isgrid2d
-        varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(3));
-    else
-        varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(2));
-    end
+    varid(ivar) = netcdf.defVar(ncid_out,'time',6,dimid(3));
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','time');
     if isleap
         netcdf.putAtt(ncid_out,ivar-1,'calendar','gregorian');
@@ -123,6 +98,12 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
 %                           Copy variables
 %
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    if ~isgrid2d
+        QDRAI = reshape(QDRAI,[nlon,nlat,nt]);
+        QOVER = reshape(QOVER,[nlon,nlat,nt]);
+        QRUNOFF = QOVER + QDRAI; % 
+    end
+
     ivar = 1;
     netcdf.putVar(ncid_out,ivar-1,QDRAI);
     ivar = 2;
