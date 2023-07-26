@@ -2,8 +2,11 @@
 % Creates an unstructured input netCDF file of MOSART for E3SM.
 %
 % # INPUTS #
-% in:                     if in is logical matrix, it indicates which cells to extract
-%                         if in is a shapefile, it is the boundary to clip the mesh
+% in: if in is logical matrix, it indicates which cells to extract
+%     if in is a shapefile, it is the boundary to clip the mesh
+%     if in is a structure data, create a dummy MOSART input file
+%       in.lon, in.lat, in.area, rlen = sqrt(in.area), rwid =
+%       0.1*sqrt(in.area), rdep = 2; rslp = 1e-4; frac = 1; gxr = 
 % mosart_gridded_filename:Gridded MOSART input data file to interpolate on (template)
 % out_netcdf_dir:         Directory where MOSART input dataset will be saved
 % mosart_usrdat_name:     User defined name for MOSART dataset
@@ -24,10 +27,12 @@ if nargin == 4
                            % 1: use all the cells in the areas
 end
 
+generate_dummy = 0;
 latixy = ncread(mosart_gridded_filename,'latixy');
 longxy = ncread(mosart_gridded_filename,'longxy');
+area      = ncread(mosart_gridded_filename,'area');
 areaTotal = ncread(mosart_gridded_filename,'areaTotal2');
-areaTotal_region = areaTotal(in);
+
 ioutlet = find(areaTotal_region == max(areaTotal_region));
 
 % if in is provided as a shapefile, using the watershed boundary to find
@@ -46,6 +51,24 @@ if islogical(in)
 else
     ncells = length(in);
 end
+
+if isstruct(in)
+    fprintf('\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n');
+    fprintf('\nCreating Dummy MOSART Input File!\n');
+    fprintf('\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n');
+    generate_dummy = 1;
+    ncells = length(in.lon);
+    lon_region = in.lon;
+    lat_region = in.lat;
+    areaTotal_region = in.area;
+    area_region      = in.area;
+else
+    lon_region       = longxy(in);
+    lat_region       = latixy(in);
+    areaTotal_region = areaTotal(in);
+    area_region      = area(in);
+end
+
 ID     = ncread(mosart_gridded_filename,'ID');
 dnID   = ncread(mosart_gridded_filename,'dnID');
 ID_region = 1 : ncells;
@@ -145,8 +168,11 @@ varid = netcdf.getConstant('GLOBAL');
 
 [~,user_name]=system('echo $USER');
 netcdf.putAtt(ncid_out,varid,'Created_by' ,user_name(1:end-1));
-netcdf.putAtt(ncid_out,varid,'Created_on' ,datestr(now,'ddd mmm dd HH:MM:SS yyyy '));
-netcdf.putAtt(ncid_out,varid,'Interpolate_from' ,mosart_gridded_filename);
+netcdf.putAtt(ncid_out,varid,'Created_on' ,string(datetime('now')));
+if generate_dummy
+else
+    netcdf.putAtt(ncid_out,varid,'Interpolate_from' ,mosart_gridded_filename);
+end
 netcdf.endDef(ncid_out);
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -159,51 +185,71 @@ for ivar = 1:nvars
     data = netcdf.getVar(ncid_inp,ivar-1);
     switch varname
         case {'lat'}
-            netcdf.putVar(ncid_out,ivar-1,latixy(in));
+            netcdf.putVar(ncid_out,ivar-1,lat_region);
         case {'lon'}
-            netcdf.putVar(ncid_out,ivar-1,longxy(in));
+            netcdf.putVar(ncid_out,ivar-1,lon_region);
+        case {'area'}
+            netcdf.putVar(ncid_out,ivar-1,area_region);
+        case {'areaTotal2'}
+            netcdf.putVar(ncid_out,ivar-1,areaTotal_region);
         case {'ele'}
-            ele_region = NaN(ncells,11);
-            for i = 1 : 11
-                tmp = data(:,:,i);
-                tmp = tmp(in);
-                assert(length(tmp) == ncells);
-                ele_region(:,i) = tmp;
+            if generate_dummy
+                ele_region = NaN(ncells,11);
+                for ii = 1 : ncells
+                    ele_region(ii,:) = 1 : 11;
+                end
+            else
+                ele_region = NaN(ncells,11);
+                for i = 1 : 11
+                    tmp = data(:,:,i);
+                    tmp = tmp(in);
+                    assert(length(tmp) == ncells);
+                    ele_region(:,i) = tmp;
+                end
             end
             netcdf.putVar(ncid_out,ivar-1,ele_region);
         case {'ID'}
             netcdf.putVar(ncid_out,ivar-1,ID_region);
         case {'dnID'}
-            dnID_temp = dnID(in);
-            ID_temp   = ID(in);
-            dnID_region = NaN(length(dnID_temp),1);
-            for i = 1 : length(dnID_temp)
-                if dnID_temp(i) == -9999
-                    dnID_region(i) = -9999;
-                else
-                    ind = find(ID_temp == dnID_temp(i));
-                    if isempty(ind)
+            if generate_dummy
+                dnID_region = ones(ncells,1).*-9999;
+            else
+                dnID_temp = dnID(in);
+                ID_temp   = ID(in);
+                dnID_region = NaN(length(dnID_temp),1);
+                for i = 1 : length(dnID_temp)
+                    if dnID_temp(i) == -9999
                         dnID_region(i) = -9999;
                     else
-                        dnID_region(i) = ID_region(ind);
+                        ind = find(ID_temp == dnID_temp(i));
+                        if isempty(ind)
+                            dnID_region(i) = -9999;
+                        else
+                            dnID_region(i) = ID_region(ind);
+                        end
                     end
                 end
-            end
-            if include_all_cells == 0
-                for ict = 1 : length(dnID_region)
-                    idn = ict;
-                    while dnID_region(idn) ~= -9999
-                        idn = dnID_region(idn);
-                    end
-                    if idn ~= ioutlet
-                        dnID_region(ict) = -9999;
+                if include_all_cells == 0
+                    for ict = 1 : length(dnID_region)
+                        idn = ict;
+                        while dnID_region(idn) ~= -9999
+                            idn = dnID_region(idn);
+                        end
+                        if idn ~= ioutlet
+                            dnID_region(ict) = -9999;
+                        end
                     end
                 end
             end
             netcdf.putVar(ncid_out,ivar-1,dnID_region);
         otherwise
             [varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
-            netcdf.putVar(ncid_out,ivar-1,data(in));
+            if generate_dummy
+                data_region = ones(ncells,1) .* nanmedian(data);
+            else
+                data_region = data(in);
+            end
+            netcdf.putVar(ncid_out,ivar-1,data_region);
     end
 end
 

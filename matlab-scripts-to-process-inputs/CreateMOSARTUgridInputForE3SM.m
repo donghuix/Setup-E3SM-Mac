@@ -4,6 +4,9 @@
 % # INPUTS #
 % in: if in is logical matrix, it indicates which cells to extract
 %     if in is a shapefile, it is the boundary to clip the mesh
+%     if in is a structure data, create a dummy MOSART input file
+%       in.lon, in.lat, in.area, rlen = sqrt(in.area), rwid =
+%       0.1*sqrt(in.area), rdep = 2; rslp = 1e-4; frac = 1; gxr = 
 % mosart_gridded_surfdata_filename: Global gridded MOSART input data file
 % out_netcdf_dir: Directory where MOSART input dataset will be saved
 % mosart_usrdat_name: User defined name for MOSART dataset
