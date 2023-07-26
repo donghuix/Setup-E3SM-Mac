@@ -62,7 +62,7 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     if isgrid2d
         varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(1)); 
     else
-        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,dimid(2)); 
+        varid(ivar) = netcdf.defVar(ncid_out,'lat',6,[dimid(2) dimid(1)]); 
     end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','latitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','latitude');
@@ -70,7 +70,11 @@ function generate_dlnd(QDRAI,QOVER,lat,lon,time,startdate,isleap,fname_out)
     netcdf.putAtt(ncid_out,ivar-1,'axis','Y');
     
     ivar = 5;
-    varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
+    if isgrid2d
+        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,dimid(2)); 
+    else
+        varid(ivar) = netcdf.defVar(ncid_out,'lon',6,[dimid(2) dimid(1)]); 
+    end
     netcdf.putAtt(ncid_out,ivar-1,'standard_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'long_name','longitude');
     netcdf.putAtt(ncid_out,ivar-1,'units','degrees_east');
