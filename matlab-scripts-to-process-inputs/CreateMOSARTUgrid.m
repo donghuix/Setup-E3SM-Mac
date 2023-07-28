@@ -5,8 +5,7 @@
 % in: if in is logical matrix, it indicates which cells to extract
 %     if in is a shapefile, it is the boundary to clip the mesh
 %     if in is a structure data, create a dummy MOSART input file
-%       in.lon, in.lat, in.area, rlen = sqrt(in.area), rwid =
-%       0.1*sqrt(in.area), rdep = 2; rslp = 1e-4; frac = 1; gxr = 
+%        * in.lon, in.lat, in.area
 % mosart_gridded_filename:Gridded MOSART input data file to interpolate on (template)
 % out_netcdf_dir:         Directory where MOSART input dataset will be saved
 % mosart_usrdat_name:     User defined name for MOSART dataset
@@ -17,10 +16,8 @@
 % Donghui Xu (donghui.xu@pnnl.gov)
 % 06/11/2020
 % ======================================================================= %
-function fname_out = CreateMOSARTUgridInputForE3SM2(...
-                    in, ...
-                    mosart_gridded_filename, ...
-                    out_netcdf_dir, mosart_usrdat_name,include_all_cells)
+function fname_out = CreateMOSARTUgrid(in,mosart_gridded_filename, out_netcdf_dir, ...
+                                       mosart_usrdat_name,include_all_cells)
 
 if nargin == 4
     include_all_cells = 0; % 0: find all the cells corresponding to the outlet
@@ -32,8 +29,6 @@ latixy = ncread(mosart_gridded_filename,'latixy');
 longxy = ncread(mosart_gridded_filename,'longxy');
 area      = ncread(mosart_gridded_filename,'area');
 areaTotal = ncread(mosart_gridded_filename,'areaTotal2');
-
-ioutlet = find(areaTotal_region == max(areaTotal_region));
 
 % if in is provided as a shapefile, using the watershed boundary to find
 % the index inside
@@ -67,6 +62,7 @@ else
     lat_region       = latixy(in);
     areaTotal_region = areaTotal(in);
     area_region      = area(in);
+    ioutlet          = find(areaTotal_region == max(areaTotal_region));
 end
 
 ID     = ncread(mosart_gridded_filename,'ID');
@@ -186,7 +182,11 @@ for ivar = 1:nvars
     switch varname
         case {'lat'}
             netcdf.putVar(ncid_out,ivar-1,lat_region);
+        case {'latixy'}
+            netcdf.putVar(ncid_out,ivar-1,lat_region);
         case {'lon'}
+            netcdf.putVar(ncid_out,ivar-1,lon_region);
+        case {'longxy'}
             netcdf.putVar(ncid_out,ivar-1,lon_region);
         case {'area'}
             netcdf.putVar(ncid_out,ivar-1,area_region);
@@ -245,7 +245,12 @@ for ivar = 1:nvars
         otherwise
             [varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
             if generate_dummy
-                data_region = ones(ncells,1) .* nanmedian(data);
+                dummyvalue = median(data(:));
+                if isa(dummyvalue,'int32')
+                    data_region = cast(ones(ncells,1),'int32') .* dummyvalue;
+                else
+                    data_region = ones(ncells,1) .* dummyvalue;
+                end
             else
                 data_region = data(in);
             end
