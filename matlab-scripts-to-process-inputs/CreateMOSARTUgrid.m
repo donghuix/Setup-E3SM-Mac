@@ -212,7 +212,9 @@ for ivar = 1:nvars
             netcdf.putVar(ncid_out,ivar-1,ID_region);
         case {'dnID'}
             if generate_dummy
-                dnID_region = ones(ncells,1).*-9999;
+                dnID_region = 1:ncells;
+                dnID_region = dnID_region' - 1;
+                dnID_region(1) = -9999;
             else
                 dnID_temp = dnID(in);
                 ID_temp   = ID(in);
@@ -245,7 +247,7 @@ for ivar = 1:nvars
         otherwise
             [varname2,vartype2,vardimids2,varnatts2]=netcdf.inqVar(ncid_out,ivar-1);
             if generate_dummy
-                dummyvalue = median(data(:));
+                dummyvalue = nanmedian(data(:));
                 if isa(dummyvalue,'int32')
                     data_region = cast(ones(ncells,1),'int32') .* dummyvalue;
                 else
