@@ -7,7 +7,7 @@ function [lon,lat,Sh,yr,mo,da,mu,sd,cv] = get_GSIM_discharge(station,read_bounda
     
     if read_boundary == 2
         Sh = struct([]);
-        addpath('/Users/xudo627/donghui/CODE/m_map/');
+        addpath('/Users/xudo627/Developments/m_map/');
         fname = ['/Users/xudo627/DATA/GSIM_metadata/GSIM_catchments/' station];
         if exist([fname '.shp'],'file')
             M=m_shaperead(fname);

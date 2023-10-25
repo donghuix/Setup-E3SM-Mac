@@ -2,10 +2,10 @@ function [et_in,lon_in,lat_in,tmon_in] = get_GLEAM_ET(S,yr1,yr2,data_dir)
     
     if nargin == 3
         data_dir = '/Volumes/LaCie/PROJECTS/ELM_Runoff_Sensitivity/global/ILAMB/DATA/et/GLEAMv3.3a/et.nc';
-        if ~exist(data_dir,'dir')
-            data_dir = '/Users/xudo627/projects/ELM_Runoff_Sensitivity/global/ILAMB/DATA/et/GLEAMv3.3a/et.nc';
+        if ~exist(data_dir,'file')
+            data_dir = '/Users/xudo627/DATA/GLEAMv3.3a/et.nc';
         end
-        if ~exist(data_dir,'dir')
+        if ~exist(data_dir,'file')
             error([data_dir ' is not exist!!!']);
         end
         varname = 'et';

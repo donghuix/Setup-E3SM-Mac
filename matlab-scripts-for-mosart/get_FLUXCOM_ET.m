@@ -1,7 +1,7 @@
 function [et_in,lon_in,lat_in,tmon_in] = get_FLUXCOM_ET(S,yr1,yr2,data_dir)
     
     if nargin == 3
-        data_dir = '/Users/xudo627/DATA/le.nc';
+        data_dir = '/Users/xudo627/DATA/FLUXCOM/le.nc';
         varname = 'le';
     end
     lon = ncread(data_dir,'lon');
