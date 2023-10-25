@@ -20,6 +20,13 @@
 
 * brew install gcc cmake mpich netcdf
 
+Note: I used ``gcc-12`` on my MacBook Pro M2 Max. To install ``mpich`` and ``netcdf`` with ``gcc-12``, I used the following command: 
+```
+export HOMEBREW_CC=gcc-12
+brew install mpich --build-from-source
+brew install netcdf --build-from-source
+```
+
 Note: If you see an error while running create_newcase that indicates perl can't find XML::LibXML, you may need to install p5-xml-libxml as well
 
 Note for install XML::LibXML 
@@ -38,17 +45,49 @@ Note for install XML::LibXML
 
 Note: Need to setup SSH key for Github: https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 Note: May need to do ``chmod 600 ~/.ssh/config``
-## 5. Test case
+## 5. Register your mac for E3SM
 
-* Create a ```.cime``` folder in home director
+* Current master of E3SM
+	1. Create a ``.cime`` folder in home directory
 
-* Modify and copy ```config_compilers.xml``` and ```config_machines.xml``` from ```your-E3SM-dir/cime/config/e3sm/machines/userdefined_laptop_template/``` to ```~/.cime/```
+	2. Copy and modify ``config_machines.xml`` from your-E3SM-dir/cime_config/machines/ to ~/.cime/
+
+	3. Create a ``gnu_mac.cmake``:
+	```
+	set(NETCDF_C_PATH "/opt/homebrew/Cellar/netcdf/4.9.2_1/")
+	set(NETCDF_FORTRAN_PATH "/opt/homebrew/Cellar/netcdf-fortran/4.6.1/")
+
+	#set(NETCDF_PATH "/usr/local")
+
+	#string(APPEND LDFLAGS " -Wl -ld_classic -lstdc++ -framework Accelerate")
+	string(APPEND LDFLAGS " -lstdc++ -framework Accelerate")
+
+	string(APPEND FFLAGS " -fallow-argument-mismatch -fallow-invalid-boz ")
+
+	# This is needed to run the Fortran unit tests;
+	# this isn't needed to build and run CESM.
+	# The following paths aren't necessary on my machine because I have my PATH set so that
+	# the right compilers are picked up by default. But it doesn't hurt to be explicit.
+	set(SFC "/opt/homebrew/bin/gfortran")
+	set(SCC "//usr/bin/clang")
+	set(SCXX "/usr/bin/clang++")
+	set(MPIFC "/opt/homebrew/bin/mpif90")
+	set(MPICC "/opt/homebrew/bin/mpicc")
+	set(MPICXX "/opt/homebrew/bin/mpicxx")
+	```
+
+* Old version E3SM (before cime_config moved out cime)
+	1. Create a ```.cime``` folder in home directory
+
+	2. Modify and copy ```config_compilers.xml``` and ```config_machines.xml``` from ```your-E3SM-dir/cime/config/e3sm/machines/userdefined_laptop_template/``` to ```~/.cime/```
 	* Find examples of modification at https://gist.github.com/donghuix/434a73a2adfbf8816cb13d0e326bb93e
+
+## 6. Test case
 
 * Create a new case
 	```
 	export RES=1x1_brazil
-	export COMPSET=ICLM45
+	export COMPSET=IELM
 	export COMPILER=gnu
 	export MACH=mac
 	export CASE_NAME=${RES}.${COMPSET}.${COMPILER}
