@@ -263,8 +263,11 @@ Note: May need to do ``chmod 600 ~/.ssh/config``
 	./xmlchange DLND_CPLHIST_YR_START=2000
 	./xmlchange DLND_CPLHIST_YR_END=2000
 	```
-	
-
+## 9. Output coupler history
+	```
+	./xmlchange HIST_OPTION=nsteps
+	./xmlchange HIST_N=1
+	```
 
 
 
