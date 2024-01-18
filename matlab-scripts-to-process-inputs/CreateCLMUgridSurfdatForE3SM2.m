@@ -64,7 +64,8 @@ if (s ~= 0)
 end
 
 ncid_inp = netcdf.open(clm_gridded_surfdata_filename,'NC_NOWRITE');
-ncid_out = netcdf.create(fname_out,'NC_CLOBBER');
+ncid_out = netcdf.create(fname_out,'64BIT_OFFSET'); 
+% For large netcdf file, need to use '64BIT_OFFSET', previously use 'NC_CLOBBER'
 
 info_inp = ncinfo(clm_gridded_surfdata_filename);
 
