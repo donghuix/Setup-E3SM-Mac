@@ -10,25 +10,42 @@
 % Author: Donghui Xu
 % Date: 11/03/2021
 % ####################################################################### %
-function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
+function [SFTS,ioutlets] = cat_mosart_streamflow(files,fname,lons,lats,areas,ioutlets,run_parallel)
 
-    if nargin == 5
+    if nargin == 6
         run_parallel = 0;
     end
 
     % Search for the grid cell index for the point of interest
-    for i = 1 : length(lons)
-        if isempty(areas)
-            ioutlets(i) = find_mosart_cell(fname,lons(i),lats(i),[]);
-        else
-            ioutlets(i) = find_mosart_cell(fname,lons(i),lats(i),areas(i));
+    if isempty(ioutlets)
+        for i = 1 : length(lons)
+            if isempty(areas)
+                [ioutlets(i),icontri{i}] = find_mosart_cell(fname,lons(i),lats(i),[]);
+            else
+                [ioutlets(i),icontri{i}] = find_mosart_cell(fname,lons(i),lats(i),areas(i));
+            end
         end
     end
+    area = ncread(fname,'area');
     
     tenperc = ceil(0.1*length(files));
     fprintf('\n------------ Reading MOSART outputs------------\n\n');
+    % Determine if FLOODPLAIN_FRACTION exists in the outputs
+    filename = fullfile(files(1).folder,files(1).name);
+    ncid = netcdf.open(filename,'nowrite');
+    try 
+        read_inundation = true;
+        FP = netcdf.inqVarID(ncid,'FLOODPLAIN_FRACTION');
+    catch exception
+        read_inundation = false;
+    end
+    netcdf.close(ncid);
     % Read streamflow from the outputs
-    SFTS = NaN(length(lons),length(files));
+    if read_inundation
+        SFTS = NaN(length(lons),length(files),2);
+    else
+        SFTS = NaN(length(lons),length(files));
+    end
     if run_parallel
         % TODO: add parallel process 
         for i = 1 : length(files)
@@ -53,9 +70,15 @@ function SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel)
             RDO = ncread(filename,'RIVER_DISCHARGE_TO_OCEAN_LIQ');
             for j = 1 : length(lons)
                 if isnan(RDL(ioutlets(j)))
-                    SFTS(j,i) = RDO(ioutlets(j));
+                    SFTS(j,i,1) = RDO(ioutlets(j));
                 else
-                    SFTS(j,i) = RDL(ioutlets(j));
+                    SFTS(j,i,1) = RDL(ioutlets(j));
+                end
+            end
+            if read_inundation
+                FP  = ncread(filename,'FLOODPLAIN_FRACTION');
+                for j = 1 : length(lons)
+                    SFTS(j,i,2) = nansum(FP([ioutlets(j); icontri{j}]).*area([ioutlets(j); icontri{j}]));
                 end
             end
         end

@@ -14,7 +14,7 @@
 % Author: Donghui Xu
 % Date: 08/13/2020
 % ####################################################################### %
-function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
+function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area,search_N)
        
     debug = 0;
     searching_method = 2; % method 1: searching from each cell to see if it flows to the given outlet
@@ -51,24 +51,24 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
     dist = pdist2([longxy(:) latixy(:)],[lon lat]);
     [B,I] = sort(dist);
     
-    if isempty(target_area)
-        search_N = 1;
-    else
-        if target_area/nanmean(area(:)) < 5
-            search_N = floor(target_area/nanmean(area(:)))/2;
-            if search_N < 4
-                search_N = 4;
-            end
-        else
-            search_N = 20;
-        end
-    end
+%     if isempty(target_area)
+%         search_N = 1;
+%     else
+%         if target_area/nanmean(area(:)) < 5
+%             search_N = floor(target_area/nanmean(area(:)))/2;
+%             if search_N < 4
+%                 search_N = 4;
+%             end
+%         else
+%             search_N = 20;
+%         end
+%     end
     
     for ifound = 1 : search_N
-        ioutlet = I(ifound);
-        outletg = ID(ioutlet);
+        io = I(ifound);
+        outletg = ID(io);
 
-        icontributing = [];
+        ic = [];
         if searching_method == 1
             tenperc = ceil(0.1*num_of_cells);
 
@@ -83,7 +83,7 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
                     found = dnID(j) == ID(outletg);
                 end
                 if found
-                    icontributing = [icontributing; i];
+                    ic = [ic; i];
                 end
             end
             fprintf('-100%% Done!\n');
@@ -95,38 +95,53 @@ function [ioutlet, icontributing] = find_mosart_cell(fname,lon,lat,target_area)
                     upstrm = find(dnID == found(i));
                     found2 = [found2; upstrm];
                 end
-                icontributing = [icontributing; found2];
+                ic = [ic; found2];
                 found = found2;
             end
         end
         if ~isempty(target_area)
-            drainage_area = nansum(area([ioutlet; icontributing]));
-            if drainage_area/target_area > 0.5 && drainage_area/target_area < 1.5
+            drainage_area = nansum(area([io; ic]));
+            if ifound == 1
+                ioutlet = io;
+                icontributing = ic;
+                error1 = abs(drainage_area - target_area);
+            else
+                error = abs(drainage_area - target_area);
+                if error < error1
+                    ioutlet = io;
+                    icontributing = ic;
+                    error1 = error;
+                end
+            end
+%            if drainage_area/target_area > 0.8 && drainage_area/target_area < 1.2
 %                 fprintf(['MOSART drainage area is ' num2str(drainage_area/1e6) 'km^{2}\n']);
 %                 fprintf(['GSIM drainage area is ' num2str(target_area/1e6) 'km^{2}\n']);
-                break;
-            end
+%                break;
+%            end
+        else
+            ioutlet = io;
+            icontributing = ic;
         end
     end
-    if ~isempty(target_area)
-        % If cannot find an approporiate grid cell then use the grid cell 
-        % that is nearest to the outlet
-        if drainage_area/target_area < 0.5 || drainage_area/target_area > 1.5
-            ioutlet = I(1);
-            outletg = ID(ioutlet);
-            icontributing = [];
-            found = outletg;
-            while ~isempty(found)
-                found2 = [];
-                for i = 1 : length(found)
-                    upstrm = find(dnID == found(i));
-                    found2 = [found2; upstrm];
-                end
-                icontributing = [icontributing; found2];
-                found = found2;
-            end
-        end
-    end
+%     if ~isempty(target_area)
+%         % If cannot find an approporiate grid cell then use the grid cell 
+%         % that is nearest to the outlet
+%         if drainage_area/target_area < 0.8 || drainage_area/target_area > 1.2
+%             ioutlet = I(1);
+%             outletg = ID(ioutlet);
+%             icontributing = [];
+%             found = outletg;
+%             while ~isempty(found)
+%                 found2 = [];
+%                 for i = 1 : length(found)
+%                     upstrm = find(dnID == found(i));
+%                     found2 = [found2; upstrm];
+%                 end
+%                 icontributing = [icontributing; found2];
+%                 found = found2;
+%             end
+%         end
+%     end
     if debug
         figure;
         plot(longxy(icontributing),latixy(icontributing),'k+'); hold on;

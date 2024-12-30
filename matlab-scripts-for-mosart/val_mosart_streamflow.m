@@ -1,4 +1,4 @@
-function [NSE,R2,SFTS] = val_mosart_streamflow(files,fname,yr1,yr2,user_basin_streamflow,show_plot,run_parallel)
+function [NSE,R2,SFTS,ioutlets] = val_mosart_streamflow(files,fname,yr1,yr2,user_basin_streamflow,show_plot,ioutlets,run_parallel)
     
 if nargin == 5
     run_parallel = 0;
@@ -21,7 +21,7 @@ else
     basin_streamflow = user_basin_streamflow;
 end
 
-SFTS = cat_mosart_streamflow(files,fname,lons,lats,areas,run_parallel);
+[SFTS, ioutlets] = cat_mosart_streamflow(files,fname,lons,lats,areas,ioutlets,run_parallel);
 
 NSE = NaN(length(lons),1);
 R2  = NaN(length(lons),1);
@@ -59,7 +59,7 @@ for i = 1 : length(basin_streamflow)
         j2 = length(basin_streamflow(i).mu);
     end
     [R2(i),~,NSE(i)] = estimate_evaluation_metric(basin_streamflow(i).mu(j1:j2), ...
-                                                  SFTS(i,i1:i2)');
+                                                  SFTS(i,i1:i2,1)');
                                               
     if show_plot
 %         figure;
@@ -68,9 +68,9 @@ for i = 1 : length(basin_streamflow)
         subplot_tight(length(basin_streamflow),1,i,[0.08 0.08]);
         plot(tmon(i1:i2),basin_streamflow(i).mu(j1:j2),'k-','LineWidth',2); hold on; grid on;
         if isfield(basin_streamflow,'color')
-            plot(tmon(i1:i2),SFTS(i,i1:i2)',':','Color',basin_streamflow(i).color,'LineWidth',3);
+            plot(tmon(i1:i2),SFTS(i,i1:i2,1)',':','Color',basin_streamflow(i).color,'LineWidth',3);
         else
-            plot(tmon(i1:i2),SFTS(i,i1:i2)','r--','LineWidth',3);
+            plot(tmon(i1:i2),SFTS(i,i1:i2,1)','r--','LineWidth',3);
         end
         title(basin_streamflow(i).label,'FontSize',16,'FontWeight','bold');
         xlim([tmon(i1) tmon(i2)]);
