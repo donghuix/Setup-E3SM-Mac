@@ -58,6 +58,7 @@ cd ${CASE_DIR}/${CASE_NAME}
 #./xmlchange STOP_N=41,STOP_OPTION=nyears #ndays, nmonths
 #./xmlchange JOB_QUEUE=slurm
 #./xmlchange REST_N=10,REST_OPTION=nyears
+#./xmlchange RESUBMIT=1
 #./xmlchange JOB_WALLCLOCK_TIME=24:00:00
 
 
@@ -87,7 +88,8 @@ ELM outputs: QOVER: surface runoff
              ZWT: ground water table
 MOSART outputs: RIVER_DISCHARGE_OVER_LAND_LIQ: river discharge on land grid cells
 			    RIVER_DISCHARGE_TO_OCEAN_LIQ: river discharge on river mouth cells
-			    FLOODED_FRACTION: floodplain inundation fraction (if inundation is turned on)
+			    FLOODPLAIN_FRACTION: floodplain inundation fraction (if inundation is turned on)
+                FLOODED_FRACTION: floodplain fraction + river area
 
 sacct to check the status of job.
 
@@ -95,7 +97,7 @@ sacct to check the status of job.
 
 ``RES=NLDAS_NLDAS #Define RESolution``
 ``COMPSET=RMOSGPCC #Define configuration``
-long name: 2000_DATM%QIA_ELM%SPBC_SICE_SOCN_MOSART_SGLC_SWAV
+long name: 2000_DATM%QIA_DLND%GPCC_SICE_SOCN_MOSART_SGLC_SWAV
 ``MACH=compy #Define MACHine``
 ``COMPILER=intel #Define compiler``
 ``PROJECT=esmd #Define project``
@@ -120,3 +122,5 @@ rtmhist_mfilt = 1
 EOF
 
 5. User costumize configuration
+``RES=ELMMOS_USRDAT``
+``RES=MOS_USRDAT``
