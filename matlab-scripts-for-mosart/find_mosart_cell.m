@@ -6,6 +6,7 @@
 %         lon -----------> longitude of the station
 %         lat -----------> latitude of the station
 %         target_area ---> accurate area of the basin [m^2]
+%         search_N ------> how many cells in the neighbor to search
 % Output: ioutlet -------> corresponding outlet index in the domain file
 %         icontributing -> the indices of the cells that contributing to
 %                          the given coordinate
