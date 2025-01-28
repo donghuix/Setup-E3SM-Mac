@@ -107,6 +107,8 @@ long name: 2000_DATM%QIA_DLND%GPCC_SICE_SOCN_MOSART_SGLC_SWAV
 `` GIT_HASH=`git log -n 1 --format=%h` ``
 `` CASE_NAME=MOS_NLDAS_${GIT_HASH}.`date "+%Y-%m-%d-%H%M%S"` ``
 
+Follow previous case for creating a new case.
+
 ./xmlchange DATM_CLMNCEP_YR_START=1979
 ./xmlchange DATM_CLMNCEP_YR_ALIGN=1979
 ./xmlchange DATM_CLMNCEP_YR_END=2000
@@ -124,3 +126,34 @@ EOF
 5. User costumize configuration
 ``RES=ELMMOS_USRDAT``
 ``RES=MOS_USRDAT``
+
+6. Run Python scripts on compy
+```
+#!/bin/csh
+
+#SBATCH --job-name=test         ## job_name
+#SBATCH --partition=short
+#SBATCH --account=esmd          ## project_name
+#SBATCH --time=00:10:00         ## time_limit
+#SBATCH --nodes=1               ## number_of_nodes
+#SBATCH --ntasks-per-node=1     ## number_of_cores
+#SBATCH --output=mat.stdout1    ## job_output_filename
+#SBATCH --error=mat.stderr1     ## job_errors_filename
+
+ulimit -s unlimited
+
+module load python/3.7.3
+
+python3 test.py > test.log
+```
+6. git notes
+
+* create a new branch: ``git branch -b donghui/rof/new-feature``: Name convention --> username/component/feature 
+
+* how to commit the branch: ``git add files, git commit -m 'message'``, 
+                            ``git push origin donghui/rof/new-feature``
+
+* Issue a PR. 
+
+Check which branch is on: ``git branch``
+
