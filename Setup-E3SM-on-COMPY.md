@@ -148,8 +148,9 @@ python3 test.py > test.log
 ```
 6. git notes
 
-* create a new branch: ``git branch -b donghui/rof/new-feature``: Name convention --> username/component/feature 
+* create a new branch: ``git checkout -b donghui/rof/new-feature``: Name convention --> username/component/feature 
 
+* check what modifications are made: ``git status``
 * how to commit the branch: ``git add files, git commit -m 'message'``, 
                             ``git push origin donghui/rof/new-feature``
 
@@ -157,3 +158,54 @@ python3 test.py > test.log
 
 Check which branch is on: ``git branch``
 
+7. How to calibrate parameters 
+ensemble e3sm simulation.
+
+8. Validating ELM-MOSART simulations
+
+9. Spin-up 
+Target Simulation: 1980 - 2009.
+Spinup Simulation: 1971 - 1980.
+    * Specify the forcing to be 1971 -1980
+    * Specify the STOP_N to be 20 years (or longer depends on how long you want to spin up the simulation).
+    <pre>
+    * Simulation time -> 1971, 1972, …, 1980, 1981, 1982, …, 1990.
+    * Forcing    time -> 1971, 1972, …, 1980, 1971, 1972, …, 1980.
+    </pre>
+Specifiy the initial condition file for the Target Simulation in user_nl_*.
+    * ELM:    finidat
+    * MOSART: finidat_rtm
+
+10. How to run python in parallel
+
+```python 
+from mpi4py import MPI
+import numpy as np
+
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
+data = np.arange(size)
+print(f"Hello from process {rank} out of {size} processes!")
+print(f"The data is " + str(data[rank]))
+```
+
+```bash
+#!/bin/csh
+
+#SBATCH --job-name=test         ## job_name
+#SBATCH --partition=short
+#SBATCH --account=esmd          ## project_name
+#SBATCH --time=00:10:00         ## time_limit
+#SBATCH --nodes=1               ## number_of_nodes
+#SBATCH --ntasks-per-node=20     ## number_of_cores
+#SBATCH --output=mat.stdout1    ## job_output_filename
+#SBATCH --error=mat.stderr1     ## job_errors_filename
+
+ulimit -s unlimited
+
+module load python/3.7.3
+
+mpirun -n 20 python3 test.py > test.log
+```
